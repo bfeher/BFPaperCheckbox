@@ -30,7 +30,7 @@
 
 
 #import <UIKit/UIKit.h>
-#import "bfPaperCheckbox.h"
+#import "BFPaperCheckbox.h"
 
 @interface BFPaperViewController : UIViewController <BFPaperCheckboxDelegate>
 

@@ -51,7 +51,7 @@
 
 @implementation BFPaperCheckbox
 // -Button size:
-CGFloat const bfPaperCheckboxDefaultRadius = 39.f;//43.5f;
+CGFloat const bfPaperCheckboxDefaultRadius = 39.f;
 // -animation durations:
 static CGFloat const bfPaperCheckbox_animationDurationConstant       = 0.12f;
 static CGFloat const bfPaperCheckbox_tapCircleGrowthDurationConstant = bfPaperCheckbox_animationDurationConstant * 2;
@@ -62,12 +62,23 @@ static CGFloat const bfPaperCheckbox_tapFillConstant                 = 0.3f;
 // -checkbox's beauty:
 static CGFloat const bfPaperCheckbox_checkboxSideLength              = 9.f;
 // -animation function names:
+static NSString *const leftLineSpinAnimationName = @"leftLineSpin";
+static NSString *const topLineSpinAnimationName = @"topLineSpin";
+static NSString *const rightLineSpinAnimationName = @"rightLineSpin";
+static NSString *const bottomLineSpinAnimationName = @"bottomLineSpin";
+
+static NSString *const leftLineSpinAnimationName2 = @"leftLineSpin2";
+static NSString *const topLineSpinAnimationName2 = @"topLineSpin2";
+static NSString *const rightLineSpinAnimationName2 = @"rightLineSpin2";
+static NSString *const bottomLineSpinAnimationName2 = @"bottomLineSpin2";
+
 static NSString *const leftLineStrokeAnimationName = @"leftLineStroke";
 static NSString *const topLineStrokeAnimationName = @"topLineStroke";
 static NSString *const rightLineStrokeAnimationName = @"rightLineStroke";
 static NSString *const bottomLineStrokeAnimationName = @"bottomLineStroke";
 static NSString *const smallCheckmarkLineAnimationName = @"smallCheckmarkLine";
 static NSString *const largeCheckmarkLineStrokeAnimationName = @"largeCheckmarkLine";
+
 static NSString *const leftLineStrokeAnimationName2 = @"leftLineStroke2";
 static NSString *const topLineStrokeAnimationName2 = @"topLineStroke2";
 static NSString *const rightLineStrokeAnimationName2 = @"rightLineStroke2";
@@ -217,9 +228,11 @@ static NSString *const largeCheckmarkLineStrokeAnimationName2 = @"largeCheckmark
     //NSLog(@"self.isChecked: %@", self.isChecked ? @"YES" : @"NO");
     
     if (self.isChecked) {
-        [self shrinkAwayCheckboxAnimated:YES];
+        // Shrink checkBOX:
+        [self spinCheckboxAnimated:YES withAngle1:M_PI_4 andAngle2:-5*M_PI_4 andRadiusDenominator:4.f forDuration:bfPaperCheckbox_animationDurationConstant];
     }
     else {
+        // Shrink checkMARK:
         [self shrinkAwayCheckmarkAnimated:YES];
     }
     [self fadeTapCircleOut];
@@ -436,11 +449,104 @@ static NSString *const largeCheckmarkLineStrokeAnimationName2 = @"largeCheckmark
 }
 
 
+- (void)spinCheckboxAnimated:(BOOL)animated withAngle1:(CGFloat)angle1
+                   andAngle2:(CGFloat)angle2
+        andRadiusDenominator:(CGFloat)radiusDenominator
+                 forDuration:(CGFloat)duration
+{
+    NSLog(@"self.isChecked: %@", self.isChecked ? @"YES" : @"NO");
+    
+    self.finishedAnimations = NO;
+    self.checkmarkSidesCompletedAnimating = 0;
+    
+    self.lineLeft.opacity   = 1;
+    self.lineTop.opacity    = 1;
+    self.lineRight.opacity  = 1;
+    self.lineBottom.opacity = 1;
+
+    CGPathRef newLeftPath   = NULL;
+    CGPathRef newTopPath    = NULL;
+    CGPathRef newRightPath  = NULL;
+    CGPathRef newBottomPath = NULL;
+    
+    CGFloat ratioDenominator = radiusDenominator * 4;
+    CGFloat radius = bfPaperCheckbox_checkboxSideLength / radiusDenominator;
+    CGFloat ratio = bfPaperCheckbox_checkboxSideLength / ratioDenominator;
+    CGFloat offset = radius - ratio;
+    CGPoint slightOffsetForCheckmarkCentering = CGPointMake(4, 9);  // Hardcoded in the most offensive way. Forgive me Father, for I have sinned.
+    
+    newLeftPath   = [self createCenteredLineWithRadius:radius angle:angle2 offset:CGPointMake(-offset - slightOffsetForCheckmarkCentering.x, -offset + slightOffsetForCheckmarkCentering.y)];
+    newTopPath    = [self createCenteredLineWithRadius:radius angle:angle1 offset:CGPointMake(offset - slightOffsetForCheckmarkCentering.x, -offset + slightOffsetForCheckmarkCentering.y)];
+    newRightPath  = [self createCenteredLineWithRadius:radius angle:angle2 offset:CGPointMake(offset - slightOffsetForCheckmarkCentering.x, offset + slightOffsetForCheckmarkCentering.y)];
+    newBottomPath = [self createCenteredLineWithRadius:radius angle:angle1 offset:CGPointMake(-offset - slightOffsetForCheckmarkCentering.x, offset + slightOffsetForCheckmarkCentering.y)];
+    
+    if (animated) {
+        {
+            // LEFT:
+            CABasicAnimation *lineLeftAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
+            lineLeftAnimation.removedOnCompletion = NO;
+            lineLeftAnimation.duration = duration;
+            lineLeftAnimation.fromValue = (__bridge id)self.lineLeft.path;
+            lineLeftAnimation.toValue = (__bridge id)newLeftPath;
+            [lineLeftAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+            lineLeftAnimation.delegate = self;
+            [lineLeftAnimation setValue:(self.isChecked ? leftLineSpinAnimationName : leftLineSpinAnimationName2) forKey:@"id"];
+            [self.lineLeft addAnimation:lineLeftAnimation forKey:@"spinLeftLine"];
+        }
+        {
+            // TOP:
+            CABasicAnimation *lineTopAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
+            lineTopAnimation.removedOnCompletion = NO;
+            lineTopAnimation.duration = duration;
+            lineTopAnimation.fromValue = (__bridge id)self.lineTop.path;
+            lineTopAnimation.toValue = (__bridge id)newTopPath;
+            [lineTopAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+            lineTopAnimation.delegate = self;
+            [lineTopAnimation setValue:(self.isChecked ? topLineSpinAnimationName : topLineSpinAnimationName2) forKey:@"id"];
+            [self.lineTop addAnimation:lineTopAnimation forKey:@"spinTopLine"];
+        }
+        {
+            // RIGHT:
+            CABasicAnimation *lineRightAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
+            lineRightAnimation.removedOnCompletion = NO;
+            lineRightAnimation.duration = duration;
+            lineRightAnimation.fromValue = (__bridge id)self.lineRight.path;
+            lineRightAnimation.toValue = (__bridge id)newRightPath;
+            [lineRightAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+            lineRightAnimation.delegate = self;
+            [lineRightAnimation setValue:(self.isChecked ? rightLineSpinAnimationName : rightLineSpinAnimationName2) forKey:@"id"];
+            [self.lineRight addAnimation:lineRightAnimation forKey:@"spinRightLine"];
+        }
+        {
+            // BOTTOM:
+            CABasicAnimation *lineBottomAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
+            lineBottomAnimation.removedOnCompletion = NO;
+            lineBottomAnimation.duration = duration;
+            lineBottomAnimation.fromValue = (__bridge id)self.lineBottom.path;
+            lineBottomAnimation.toValue = (__bridge id)newBottomPath;
+            [lineBottomAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
+            lineBottomAnimation.delegate = self;
+            [lineBottomAnimation setValue:(self.isChecked ? bottomLineSpinAnimationName : bottomLineSpinAnimationName2) forKey:@"id"];
+            [self.lineBottom addAnimation:lineBottomAnimation forKey:@"spinBottomLine"];
+        }
+    }
+    
+    self.lineLeft.path = newLeftPath;
+    self.lineTop.path = newTopPath;
+    self.lineRight.path = newRightPath;
+    self.lineBottom.path = newBottomPath;
+    
+    CGPathRelease(newLeftPath);
+    CGPathRelease(newTopPath);
+    CGPathRelease(newRightPath);
+    CGPathRelease(newBottomPath);
+}
+
 - (void)shrinkAwayCheckboxAnimated:(BOOL)animated
 // This fucntion only modyfies the checkbox. When it's animation is complete, it calls a function to draw the checkmark.
 {
-    self.finishedAnimations = NO;
-    self.checkmarkSidesCompletedAnimating = 0;
+//    self.finishedAnimations = NO;
+//    self.checkmarkSidesCompletedAnimating = 0;
     
     // Red dot for debugging
     /*CALayer *redDot = [[CALayer alloc] init];
@@ -460,6 +566,8 @@ static NSString *const largeCheckmarkLineStrokeAnimationName2 = @"largeCheckmark
     CGFloat offset = radius - ratio;
     CGPoint slightOffsetForCheckmarkCentering = CGPointMake(4, 9);  // Hardcoded in the most offensive way. Forgive me Father, for I have sinned.
     
+    CGFloat duration = bfPaperCheckbox_animationDurationConstant / 4.f;
+    
     newLeftPath   = [self createCenteredLineWithRadius:radius angle:-5 * M_PI_4 offset:CGPointMake(-offset - slightOffsetForCheckmarkCentering.x, -offset + slightOffsetForCheckmarkCentering.y)];
     newTopPath    = [self createCenteredLineWithRadius:radius angle:M_PI_4 offset:CGPointMake(offset - slightOffsetForCheckmarkCentering.x, -offset + slightOffsetForCheckmarkCentering.y)];
     newRightPath  = [self createCenteredLineWithRadius:radius angle:-5 * M_PI_4 offset:CGPointMake(offset - slightOffsetForCheckmarkCentering.x, offset + slightOffsetForCheckmarkCentering.y)];
@@ -470,15 +578,15 @@ static NSString *const largeCheckmarkLineStrokeAnimationName2 = @"largeCheckmark
             // LEFT:
             CABasicAnimation *lineLeftAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
             lineLeftAnimation.removedOnCompletion = NO;
-            lineLeftAnimation.duration = bfPaperCheckbox_animationDurationConstant;
+            lineLeftAnimation.duration = duration;
             lineLeftAnimation.fromValue = (__bridge id)self.lineLeft.path;
             lineLeftAnimation.toValue = (__bridge id)newLeftPath;
-            [lineLeftAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+            [lineLeftAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
             [self.lineLeft addAnimation:lineLeftAnimation forKey:@"animateLeftLinePath"];
             
             CABasicAnimation *leftLineColorAnimation = [CABasicAnimation animationWithKeyPath:@"strokeColor"];
             leftLineColorAnimation.removedOnCompletion = NO;
-            leftLineColorAnimation.duration = bfPaperCheckbox_animationDurationConstant;
+            leftLineColorAnimation.duration = duration;
             leftLineColorAnimation.fromValue = (__bridge id)self.lineLeft.strokeColor;
             leftLineColorAnimation.toValue = (__bridge id)self.checkmarkColor.CGColor;
             [leftLineColorAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
@@ -491,15 +599,15 @@ static NSString *const largeCheckmarkLineStrokeAnimationName2 = @"largeCheckmark
             // TOP:
             CABasicAnimation *lineTopAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
             lineTopAnimation.removedOnCompletion = NO;
-            lineTopAnimation.duration = bfPaperCheckbox_animationDurationConstant;
+            lineTopAnimation.duration = duration;
             lineTopAnimation.fromValue = (__bridge id)self.lineTop.path;
             lineTopAnimation.toValue = (__bridge id)newTopPath;
-            [lineTopAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+            [lineTopAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
             [self.lineTop addAnimation:lineTopAnimation forKey:@"animateTopLinePath"];
             
             CABasicAnimation *topLineColorAnimation = [CABasicAnimation animationWithKeyPath:@"strokeColor"];
             topLineColorAnimation.removedOnCompletion = NO;
-            topLineColorAnimation.duration = bfPaperCheckbox_animationDurationConstant;
+            topLineColorAnimation.duration = duration;
             topLineColorAnimation.fromValue = (__bridge id)self.lineTop.strokeColor;
             topLineColorAnimation.toValue = (__bridge id)self.checkmarkColor.CGColor;
             [topLineColorAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
@@ -511,15 +619,15 @@ static NSString *const largeCheckmarkLineStrokeAnimationName2 = @"largeCheckmark
             // RIGHT:
             CABasicAnimation *lineRightAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
             lineRightAnimation.removedOnCompletion = NO;
-            lineRightAnimation.duration = bfPaperCheckbox_animationDurationConstant;
+            lineRightAnimation.duration = duration;
             lineRightAnimation.fromValue = (__bridge id)self.lineRight.path;
             lineRightAnimation.toValue = (__bridge id)newRightPath;
-            [lineRightAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+            [lineRightAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
             [self.lineRight addAnimation:lineRightAnimation forKey:@"animateRightLinePath"];
             
             CABasicAnimation *rightLineColorAnimation = [CABasicAnimation animationWithKeyPath:@"strokeColor"];
             rightLineColorAnimation.removedOnCompletion = NO;
-            rightLineColorAnimation.duration = bfPaperCheckbox_animationDurationConstant;
+            rightLineColorAnimation.duration = duration;
             rightLineColorAnimation.fromValue = (__bridge id)self.lineRight.strokeColor;
             rightLineColorAnimation.toValue = (__bridge id)self.checkmarkColor.CGColor;
             [rightLineColorAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
@@ -531,15 +639,15 @@ static NSString *const largeCheckmarkLineStrokeAnimationName2 = @"largeCheckmark
             // BOTTOM:
             CABasicAnimation *lineBottomAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
             lineBottomAnimation.removedOnCompletion = NO;
-            lineBottomAnimation.duration = bfPaperCheckbox_animationDurationConstant;
+            lineBottomAnimation.duration = duration;
             lineBottomAnimation.fromValue = (__bridge id)self.lineBottom.path;
             lineBottomAnimation.toValue = (__bridge id)newBottomPath;
-            [lineBottomAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+            [lineBottomAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
             [self.lineBottom addAnimation:lineBottomAnimation forKey:@"animateBottomLinePath"];
             
             CABasicAnimation *bottomLineColorAnimation = [CABasicAnimation animationWithKeyPath:@"strokeColor"];
             bottomLineColorAnimation.removedOnCompletion = NO;
-            bottomLineColorAnimation.duration = bfPaperCheckbox_animationDurationConstant;
+            bottomLineColorAnimation.duration = duration;
             bottomLineColorAnimation.fromValue = (__bridge id)self.lineBottom.strokeColor;
             bottomLineColorAnimation.toValue = (__bridge id)self.checkmarkColor.CGColor;
             [bottomLineColorAnimation setTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
@@ -727,6 +835,36 @@ static NSString *const largeCheckmarkLineStrokeAnimationName2 = @"largeCheckmark
             [self drawCheckmarkAnimated:YES];
         }
     }
+    else if ([[animation valueForKey:@"id"] isEqualToString:leftLineSpinAnimationName]
+             ||
+             [[animation valueForKey:@"id"] isEqualToString:topLineSpinAnimationName]
+             ||
+             [[animation valueForKey:@"id"] isEqualToString:rightLineSpinAnimationName]
+             ||
+             [[animation valueForKey:@"id"] isEqualToString:bottomLineSpinAnimationName]) {
+        self.checkboxSidesCompletedAnimating++;
+        
+        if (self.checkboxSidesCompletedAnimating >= 4) {
+            self.checkboxSidesCompletedAnimating = 0;
+            [self shrinkAwayCheckboxAnimated:YES];
+        }
+    }
+    else if ([[animation valueForKey:@"id"] isEqualToString:leftLineSpinAnimationName2]
+             ||
+             [[animation valueForKey:@"id"] isEqualToString:topLineSpinAnimationName2]
+             ||
+             [[animation valueForKey:@"id"] isEqualToString:rightLineSpinAnimationName2]
+             ||
+             [[animation valueForKey:@"id"] isEqualToString:bottomLineSpinAnimationName2]) {
+        self.checkboxSidesCompletedAnimating++;
+        
+        if (self.checkboxSidesCompletedAnimating >= 4) {
+            self.checkboxSidesCompletedAnimating = 0;
+            self.finishedAnimations = YES;
+            [self drawCheckBoxAnimated:YES];
+            //NSLog(@"FINISHED animating 4 sides of checkbox");
+        }
+    }
     else if ([[animation valueForKey:@"id"] isEqualToString:smallCheckmarkLineAnimationName]
              ||
              [[animation valueForKey:@"id"] isEqualToString:largeCheckmarkLineStrokeAnimationName]) {
@@ -743,7 +881,7 @@ static NSString *const largeCheckmarkLineStrokeAnimationName2 = @"largeCheckmark
         self.checkmarkSidesCompletedAnimating++;
         if (self.checkmarkSidesCompletedAnimating >= 2) {
             self.checkmarkSidesCompletedAnimating = 0;
-            [self drawCheckBoxAnimated:YES];
+            [self spinCheckboxAnimated:YES withAngle1:M_PI_4 andAngle2:-5*M_PI_4 andRadiusDenominator:4 forDuration:bfPaperCheckbox_animationDurationConstant / 2.f];
         }
     }
 

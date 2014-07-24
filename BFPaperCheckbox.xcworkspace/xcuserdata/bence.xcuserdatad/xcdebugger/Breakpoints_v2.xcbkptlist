@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Classes/BFPaperCheckbox.m"
-            timestampString = "427857650.351899"
+            timestampString = "427869799.327719"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "464"
-            endingLineNumber = "464"
+            startingLineNumber = "572"
+            endingLineNumber = "572"
             landmarkName = "-shrinkAwayCheckboxAnimated:"
             landmarkType = "5">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Classes/BFPaperCheckbox.m"
-            timestampString = "427857650.351899"
+            timestampString = "427868254.37994"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "211"
-            endingLineNumber = "211"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
             landmarkName = "-paperTouchUpAndSwitchStates:"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Classes/BFPaperCheckbox.m"
-            timestampString = "427857650.351899"
+            timestampString = "427868254.37994"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "212"
-            endingLineNumber = "212"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
             landmarkName = "-paperTouchUpAndSwitchStates:"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Classes/BFPaperCheckbox.m"
-            timestampString = "427857650.351899"
+            timestampString = "427868254.37994"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "216"
-            endingLineNumber = "216"
+            startingLineNumber = "227"
+            endingLineNumber = "227"
             landmarkName = "-paperTouchUpAndSwitchStates:"
             landmarkType = "5">
          </BreakpointContent>
