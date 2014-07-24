@@ -1,5 +1,6 @@
 BFPaperCheckbox
 =============
+[![CocoaPods](https://img.shields.io/cocoapods/v/BFPaperCheckbox.svg?style=flat)](https://github.com/bfeher/BFPaperCheckbox)
 
 > iOS Checkboxes inspired by Google's Paper Material Design. 
 
@@ -79,7 +80,7 @@ Learn more at http://cocoapods.org
 Add this to your podfile to add BFPaperCheckbox to your project.
 ```ruby
 platform :ios, '7.0'
-pod 'BFPaperCheckbox', '~> 1.0.2'
+pod 'BFPaperCheckbox', '~> 1.0.3'
 ```
 
 
