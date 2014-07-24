@@ -54,10 +54,10 @@
 /** A BOOL representing the state of the checkbox. YES means checked, NO means unchecked. **/
 @property BOOL isChecked;
 
-/** A nice recommended value for size. */
-extern CGFloat const bfPaperCheckboxDefaultRadius;
-
 /** A delegate to use our protocol with! */
 @property (weak) id <BFPaperCheckboxDelegate> delegate;
+
+/** A nice recommended value for size. (eg. [[BFPaperCheckbox alloc] initWithFrame:CGRectMake(x, y, bfPaperCheckboxDefaultRadius * 2, bfPaperCheckboxDefaultRadius * 2)]; */
+extern CGFloat const bfPaperCheckboxDefaultRadius;
 
 @end
