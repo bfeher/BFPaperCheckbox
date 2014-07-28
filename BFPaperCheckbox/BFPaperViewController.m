@@ -95,6 +95,51 @@
     standardSwitchLabel.backgroundColor = [UIColor clearColor];
     [self.view addSubview:standardSwitchLabel];
 
+    
+    // A button for programmatically swapping states with animations:
+    UIButton *animateChangeBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, 300, 135, 31)];
+    animateChangeBtn.tag = 2001;
+    animateChangeBtn.backgroundColor = [UIColor darkGrayColor];
+    [animateChangeBtn setTitle:@"animate change" forState:UIControlStateNormal];
+    [animateChangeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [animateChangeBtn addTarget:self action:@selector(tapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:animateChangeBtn];
+    
+    // A button for programmatically swapping states without animations:
+    UIButton *staticChangeBtn = [[UIButton alloc] initWithFrame:CGRectMake(165, 300, 135, 31)];
+    staticChangeBtn.tag = 2002;
+    staticChangeBtn.backgroundColor = [UIColor darkGrayColor];
+    [staticChangeBtn setTitle:@"static change" forState:UIControlStateNormal];
+    [staticChangeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [staticChangeBtn addTarget:self action:@selector(tapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:staticChangeBtn];
+
+}
+
+- (void)tapped:(UIButton *)sender
+{
+    BOOL animate;
+    if (sender.tag == 2001) {
+        animate = YES;
+    }
+    else if (sender.tag == 2002) {
+        animate = NO;
+    }
+    
+    /* 
+     * Below are the two ways of programmatically setting the state of a checkbox.
+     */
+    
+    // (1) Swap paperCheckbox's state with the 'switchStates...' method:
+    [self.paperCheckbox switchStatesAnimated:animate];
+    
+    // (2) Swap paperCheckbox2's state with the 'check...'/'uncheck...' methods:
+    if (self.paperCheckbox2.isChecked) {
+        [self.paperCheckbox2 uncheckAnimated:animate];
+    }
+    else {
+        [self.paperCheckbox2 checkAnimated:animate];
+    }
 }
 
 - (void)didReceiveMemoryWarning

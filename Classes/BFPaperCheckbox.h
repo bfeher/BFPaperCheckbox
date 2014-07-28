@@ -52,7 +52,7 @@
 @property UIColor *tapCircleNegativeColor;
 
 /** A BOOL representing the state of the checkbox. YES means checked, NO means unchecked. **/
-@property BOOL isChecked;
+@property (nonatomic, readonly) BOOL isChecked;
 
 /** A delegate to use our protocol with! */
 @property (weak) id <BFPaperCheckboxDelegate> delegate;
@@ -60,4 +60,24 @@
 /** A nice recommended value for size. (eg. [[BFPaperCheckbox alloc] initWithFrame:CGRectMake(x, y, bfPaperCheckboxDefaultRadius * 2, bfPaperCheckboxDefaultRadius * 2)]; */
 extern CGFloat const bfPaperCheckboxDefaultRadius;
 
+/**
+ *  Use this function to manually/programmatically switch the state of this checkbox.
+ *
+ *  @param animated A BOOL flag to choose whether or not to animate the change.
+ */
+- (void)switchStatesAnimated:(BOOL)animated;
+
+/**
+ *  Use this function to manually check the checkbox. Does nothing if already checked.
+ *
+ *  @param animated A BOOL flag to choose whether or not to animate the change.
+ */
+- (void)checkAnimated:(BOOL)animated;
+
+/**
+ *  Use this function to manually uncheck the checkbox. Does nothing if already unchecked.
+ *
+ *  @param animated A BOOL flag to choose whether or not to animate the change.
+ */
+- (void)uncheckAnimated:(BOOL)animated;
 @end

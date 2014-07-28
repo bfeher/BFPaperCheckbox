@@ -18,50 +18,37 @@ By default, BFPaperCheckboxes use "Smart Color" which will match the tap-circle'
 You can set your own colors via: `.tapCirclePositiveColor` and `.tapCircleNegativeColor`. Note that setting these disables Smart Color.
 
 ## Properties
-`UIColor *checkmarkColor` 
-
+`UIColor *checkmarkColor` <br />
 A UIColor to use for the checkmark color. Note that self.tintColor will be used for the square box color.
 
-
-`UIColor *tapCirclePositiveColor` 
-
+`UIColor *tapCirclePositiveColor` <br />
 The UIColor to use for the circle which appears where you tap to check the box. NOTE: Setting this defeats the "Smart Color" ability of the tap circle. Alpha values less than 1 are recommended.
 
-
-`UIColor *chectapCircleNegativeColorkmarkColor` 
-
+`UIColor *chectapCircleNegativeColorkmarkColor`<br /> 
 The UIColor to use for the circle which appears where you tap to uncheck the box. NOTE: Setting this defeats the "Smart Color" ability of the tap circle. Alpha values less than 1 are recommended.
 
-
-`BOOL rippleFromTapLocation`
-
+`BOOL rippleFromTapLocation`<br />
 A flag to set to YES to have the tap-circle ripple from point of touch. If this is set to NO, the tap-circle will always ripple from the center of the control. Default is YES.
 
 ## Delegate
-`- (void)paperCheckboxChangedState:(BFPaperCheckbox *)checkbox`
-
+`- (void)paperCheckboxChangedState:(BFPaperCheckbox *)checkbox`<br />
 An optional protocol method for detecting when the checkbox state changed. You can check its current state here with 'checkbox.isChecked'.
 
 ## Constant
-`CGFloat const bfPaperCheckboxDefaultRadius`
-
+`CGFloat const bfPaperCheckboxDefaultRadius`<br />
 A nice recommended value for size. (eg. `[[BFPaperCheckbox alloc] initWithFrame:CGRectMake(x, y, bfPaperCheckboxDefaultRadius * 2, bfPaperCheckboxDefaultRadius * 2)];`)
 
 ## Utility Functions (programmatically set state)
-`(void)switchButtonStatesAnimated:(BOOL)animated`
-
+`(void)switchStatesAnimated:(BOOL)animated`<br />
 Use this function to manually/programmatically switch the state of this checkbox.
 @param `animated` A BOOL flag to choose whether or not to animate the change.
 
-
-`(void)checkAnimated:(BOOL)animated`
-
+`(void)checkAnimated:(BOOL)animated`<br />
 Use this function to manually check the checkbox. Does nothing if already checked.
 @param `animated` A BOOL flag to choose whether or not to animate the change.
 
 
-`void)uncheckAnimated:(BOOL)animated`
-
+`void)uncheckAnimated:(BOOL)animated`<br />
 Use this function to manually uncheck the checkbox. Does nothing if already unchecked.
 @param `animated` A BOOL flag to choose whether or not to animate the change.
 
@@ -77,7 +64,7 @@ BFPaperCheckbox *paperCheckbox = [[BFPaperCheckbox alloc] initWithFrame:CGRectMa
 ```
 
 ### Working Example
-*(Taken directly from example project.)*
+*(Taken directly from example project.)*<br />
 ```objective-c
 BFPaperCheckbox *paperCheckbox = [[BFPaperCheckbox alloc] initWithFrame:CGRectMake(20, 150, bfPaperCheckboxDefaultRadius * 2, bfPaperCheckboxDefaultRadius * 2)];
 self.paperCheckbox.tag = 1001;
@@ -86,7 +73,7 @@ self.paperCheckbox.delegate = self;
 ```
 
 ### Customized Example
-*(Taken directly from example project.)*
+*(Taken directly from example project.)*<br />
 ```objective-c
 BFPaperCheckbox *paperCheckbox2 = [[BFPaperCheckbox alloc] initWithFrame:CGRectMake(0, 250, 25 * 2, 25 * 2)];
 self.paperCheckbox2.center = CGPointMake(self.paperCheckbox.center.x, self.paperCheckbox2.frame.origin.y);
@@ -100,14 +87,14 @@ self.paperCheckbox2.checkmarkColor = [UIColor paperColorLightBlue];
 ```
 
 ### Setting states manually
-*(Taken directly from example project.)*
+*(Taken directly from example project.)*<br />
 ```objective-c
 /* 
  * Below are the two ways of programmatically setting the state of a checkbox.
  */
     
-// (1) Swap paperCheckbox's state with the 'switchButtonStates...' method:
-[self.paperCheckbox switchButtonStatesAnimated:animate];
+// (1) Swap paperCheckbox's state with the 'switchStates...' method:
+[self.paperCheckbox switchStatesAnimated:animate];
     
 // (2) Swap paperCheckbox2's state with the 'check...'/'uncheck...' methods:
 if (self.paperCheckbox2.isChecked) {
