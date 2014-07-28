@@ -19,36 +19,49 @@ You can set your own colors via: `.tapCirclePositiveColor` and `.tapCircleNegati
 
 ## Properties
 `UIColor *checkmarkColor` 
+
 A UIColor to use for the checkmark color. Note that self.tintColor will be used for the square box color.
 
+
 `UIColor *tapCirclePositiveColor` 
+
 The UIColor to use for the circle which appears where you tap to check the box. NOTE: Setting this defeats the "Smart Color" ability of the tap circle. Alpha values less than 1 are recommended.
 
+
 `UIColor *chectapCircleNegativeColorkmarkColor` 
+
 The UIColor to use for the circle which appears where you tap to uncheck the box. NOTE: Setting this defeats the "Smart Color" ability of the tap circle. Alpha values less than 1 are recommended.
 
+
 `BOOL rippleFromTapLocation`
+
 A flag to set to YES to have the tap-circle ripple from point of touch. If this is set to NO, the tap-circle will always ripple from the center of the control. Default is YES.
 
 ## Delegate
 `- (void)paperCheckboxChangedState:(BFPaperCheckbox *)checkbox`
+
 An optional protocol method for detecting when the checkbox state changed. You can check its current state here with 'checkbox.isChecked'.
 
 ## Constant
 `CGFloat const bfPaperCheckboxDefaultRadius`
+
 A nice recommended value for size. (eg. `[[BFPaperCheckbox alloc] initWithFrame:CGRectMake(x, y, bfPaperCheckboxDefaultRadius * 2, bfPaperCheckboxDefaultRadius * 2)];`)
 
 ## Utility Functions (programmatically set state)
 `(void)switchButtonStatesAnimated:(BOOL)animated`
+
 Use this function to manually/programmatically switch the state of this checkbox.
 @param `animated` A BOOL flag to choose whether or not to animate the change.
 
+
 `(void)checkAnimated:(BOOL)animated`
+
 Use this function to manually check the checkbox. Does nothing if already checked.
 @param `animated` A BOOL flag to choose whether or not to animate the change.
 
 
 `void)uncheckAnimated:(BOOL)animated`
+
 Use this function to manually uncheck the checkbox. Does nothing if already unchecked.
 @param `animated` A BOOL flag to choose whether or not to animate the change.
 
@@ -98,10 +111,10 @@ self.paperCheckbox2.checkmarkColor = [UIColor paperColorLightBlue];
     
 // (2) Swap paperCheckbox2's state with the 'check...'/'uncheck...' methods:
 if (self.paperCheckbox2.isChecked) {
-[self.paperCheckbox2 uncheckAnimated:animate];
+  [self.paperCheckbox2 uncheckAnimated:animate];
 }
 else {
-[self.paperCheckbox2 checkAnimated:animate];
+  [self.paperCheckbox2 checkAnimated:animate];
 }
 ```
 
