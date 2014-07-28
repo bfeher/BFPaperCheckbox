@@ -38,6 +38,21 @@ An optional protocol method for detecting when the checkbox state changed. You c
 `CGFloat const bfPaperCheckboxDefaultRadius`
 A nice recommended value for size. (eg. `[[BFPaperCheckbox alloc] initWithFrame:CGRectMake(x, y, bfPaperCheckboxDefaultRadius * 2, bfPaperCheckboxDefaultRadius * 2)];`)
 
+## Utility Functions (programmatically set state)
+`(void)switchButtonStatesAnimated:(BOOL)animated`
+Use this function to manually/programmatically switch the state of this checkbox.
+@param `animated` A BOOL flag to choose whether or not to animate the change.
+
+`(void)checkAnimated:(BOOL)animated`
+Use this function to manually check the checkbox. Does nothing if already checked.
+@param `animated` A BOOL flag to choose whether or not to animate the change.
+
+
+`void)uncheckAnimated:(BOOL)animated`
+Use this function to manually uncheck the checkbox. Does nothing if already unchecked.
+@param `animated` A BOOL flag to choose whether or not to animate the change.
+
+
 
 Usage
 ---------
@@ -71,6 +86,25 @@ self.paperCheckbox2.checkmarkColor = [UIColor paperColorLightBlue];
 [self.view addSubview:self.paperCheckbox2];
 ```
 
+### Setting states manually
+*(Taken directly from example project.)*
+```objective-c
+/* 
+ * Below are the two ways of programmatically setting the state of a checkbox.
+ */
+    
+// (1) Swap paperCheckbox's state with the 'switchButtonStates...' method:
+[self.paperCheckbox switchButtonStatesAnimated:animate];
+    
+// (2) Swap paperCheckbox2's state with the 'check...'/'uncheck...' methods:
+if (self.paperCheckbox2.isChecked) {
+[self.paperCheckbox2 uncheckAnimated:animate];
+}
+else {
+[self.paperCheckbox2 checkAnimated:animate];
+}
+```
+
 Cocoapods
 -------
 
@@ -80,7 +114,7 @@ Learn more at http://cocoapods.org
 Add this to your podfile to add BFPaperCheckbox to your project.
 ```ruby
 platform :ios, '7.0'
-pod 'BFPaperCheckbox', '~> 1.0.3'
+pod 'BFPaperCheckbox', '~> 1.1.0'
 ```
 
 
