@@ -299,53 +299,65 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     //NSLog(@"expanding a tap circle");
     
     // Spawn a growing circle that "ripples" through the button:
-    CGRect endRect = CGRectMake(self.bounds.origin.x, self.bounds.origin.y , self.bounds.size.width, self.bounds.size.height);
     
+    CGFloat tapCircleDiameterEndValue = (self.rippleFromTapLocation) ? self.radius * 4 : self.radius * 2.f; // if the circle comes from the center, its the perfect size. otherwise it will be quite small.
+
+
+    // Calculate the tap circle's ending diameter:
+    CGFloat tapCircleFinalDiameter = (self.rippleFromTapLocation) ? self.radius * 4 : self.radius * 2.f; // if the circle comes from the center, its the perfect size. otherwise it will be quite small.
     
-    CALayer *tempAnimationLayer = [CALayer new];
-    tempAnimationLayer.frame = endRect;
-    tempAnimationLayer.cornerRadius = self.radius;
+    // Create a UIView which we can modify for its frame value later (specifically, the ability to use .center):
+    UIView *tapCircleLayerSizerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tapCircleFinalDiameter, tapCircleFinalDiameter)];
+    tapCircleLayerSizerView.center = self.rippleFromTapLocation ? self.tapPoint : CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
     
+    // Calculate starting path:
+    UIView *startingRectSizerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, bfPaperCheckbox_tapCircleDiameterStartValue, bfPaperCheckbox_tapCircleDiameterStartValue)];
+    startingRectSizerView.center = tapCircleLayerSizerView.center;
     
-    // Set animation layer's background color:
+    // Create starting circle path:
+    UIBezierPath *startingCirclePath = [UIBezierPath bezierPathWithRoundedRect:startingRectSizerView.frame cornerRadius:bfPaperCheckbox_tapCircleDiameterStartValue / 2.f];
+    
+    // Calculate ending path:
+    UIView *endingRectSizerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tapCircleDiameterEndValue, tapCircleDiameterEndValue)];
+    endingRectSizerView.center = tapCircleLayerSizerView.center;
+    
+    // Create ending circle path:
+    UIBezierPath *endingCirclePath = [UIBezierPath bezierPathWithRoundedRect:endingRectSizerView.frame cornerRadius:tapCircleDiameterEndValue / 2.f];
+    
+    // Create tap circle:
+    CAShapeLayer *tapCircle = [CAShapeLayer layer];
+    tapCircle.strokeColor = [UIColor clearColor].CGColor;
+    tapCircle.borderColor = [UIColor clearColor].CGColor;
+    tapCircle.borderWidth = 0;
+    tapCircle.path = startingCirclePath.CGPath;
+    // Set tap circle layer's background color:
     if (self.isChecked) {
         // It is currently checked, so we are unchecking it:
-        tempAnimationLayer.backgroundColor = (nil == self.tapCircleNegativeColor) ? [[UIColor paperColorGray700] colorWithAlphaComponent:bfPaperCheckbox_tapFillConstant].CGColor : self.tapCircleNegativeColor.CGColor;
+        tapCircle.fillColor = (!self.tapCircleNegativeColor) ? [[UIColor paperColorGray700] colorWithAlphaComponent:bfPaperCheckbox_tapFillConstant].CGColor : self.tapCircleNegativeColor.CGColor;
     }
     else {
         // It is currently unchecked, so we are checking it:
-        tempAnimationLayer.backgroundColor = (nil == self.tapCirclePositiveColor) ? [self.checkmarkColor colorWithAlphaComponent:bfPaperCheckbox_tapFillConstant].CGColor : self.tapCirclePositiveColor.CGColor;
+        tapCircle.fillColor = (!self.tapCirclePositiveColor) ? [self.checkmarkColor colorWithAlphaComponent:bfPaperCheckbox_tapFillConstant].CGColor : self.tapCirclePositiveColor.CGColor;
     }
-    tempAnimationLayer.borderColor = [UIColor clearColor].CGColor;
-    tempAnimationLayer.borderWidth = 0;
+
+    
+    // Add tap circle to array and view:
+    [self.rippleAnimationQueue addObject:tapCircle];
+    [self.layer insertSublayer:tapCircle atIndex:0];
     
     
-    // Animation Mask Rects
-    CGPoint origin = self.rippleFromTapLocation ? self.tapPoint : CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-    //NSLog(@"self.center: (x%0.2f, y%0.2f)", self.center.x, self.center.y);
-    UIBezierPath *startingTapCirclePath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(origin.x - (bfPaperCheckbox_tapCircleDiameterStartValue / 2.f), origin.y - (bfPaperCheckbox_tapCircleDiameterStartValue / 2.f), bfPaperCheckbox_tapCircleDiameterStartValue, bfPaperCheckbox_tapCircleDiameterStartValue) cornerRadius:bfPaperCheckbox_tapCircleDiameterStartValue / 2.f];
-    
-    CGFloat tapCircleDiameterEndValue = (self.rippleFromTapLocation) ? self.radius * 4 : self.self.radius * 2.f;
-    UIBezierPath *endTapCirclePath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(origin.x - (tapCircleDiameterEndValue/ 2.f), origin.y - (tapCircleDiameterEndValue/ 2.f), tapCircleDiameterEndValue, tapCircleDiameterEndValue) cornerRadius:tapCircleDiameterEndValue/ 2.f];
-    
-    // Animation Mask Layer:
-    CAShapeLayer *animationMaskLayer = [CAShapeLayer layer];
-    animationMaskLayer.path = endTapCirclePath.CGPath;
-    animationMaskLayer.fillColor = [UIColor blackColor].CGColor;
-    animationMaskLayer.strokeColor = [UIColor clearColor].CGColor;
-    animationMaskLayer.borderColor = [UIColor clearColor].CGColor;
-    animationMaskLayer.borderWidth = 0;
-    
-    tempAnimationLayer.mask = animationMaskLayer;
-    
-    // Grow tap-circle animation:
+    /*
+     * Animations:
+     */
+    // Grow tap-circle animation (performed on mask layer):
     CABasicAnimation *tapCircleGrowthAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
     tapCircleGrowthAnimation.delegate = self;
     [tapCircleGrowthAnimation setValue:@"tapGrowth" forKey:@"id"];
+    [UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:)];
     tapCircleGrowthAnimation.duration = bfPaperCheckbox_tapCircleGrowthDurationConstant;
     tapCircleGrowthAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-    tapCircleGrowthAnimation.fromValue = (__bridge id)startingTapCirclePath.CGPath;
-    tapCircleGrowthAnimation.toValue = (__bridge id)endTapCirclePath.CGPath;
+    tapCircleGrowthAnimation.fromValue = (__bridge id)startingCirclePath.CGPath;
+    tapCircleGrowthAnimation.toValue = (__bridge id)endingCirclePath.CGPath;
     tapCircleGrowthAnimation.fillMode = kCAFillModeForwards;
     tapCircleGrowthAnimation.removedOnCompletion = NO;
     
@@ -358,13 +370,9 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     fadeIn.fillMode = kCAFillModeForwards;
     fadeIn.removedOnCompletion = NO;
     
-    
-    // Add the animation layer to our animation queue and insert it into our view:
-    [self.rippleAnimationQueue addObject:tempAnimationLayer];
-    [self.layer insertSublayer:tempAnimationLayer atIndex:0];
-    
-    [animationMaskLayer addAnimation:tapCircleGrowthAnimation forKey:@"animatePath"];
-    [tempAnimationLayer addAnimation:fadeIn forKey:@"opacityAnimation"];
+    // Add the animations to the layers:
+    [tapCircle addAnimation:tapCircleGrowthAnimation forKey:@"animatePath"];
+    [tapCircle addAnimation:fadeIn forKey:@"opacityAnimation"];
 }
 
 
