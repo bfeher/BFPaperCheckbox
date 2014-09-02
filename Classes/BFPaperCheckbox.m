@@ -38,6 +38,7 @@
 @property (nonatomic, strong) CAShapeLayer *lineBottom; // Also used for checkmark right, longer line.
 @property CGPoint tapPoint;
 @property NSMutableArray *rippleAnimationQueue;
+@property NSMutableArray *deathRowForCircleLayers;  // This is where old circle layers go to be killed :(
 @property CGFloat radius;
 @property int checkboxSidesCompletedAnimating;          // This should bounce between 0 and 4, representing the number of checkbox sides which have completed animating.
 @property int checkmarkSidesCompletedAnimating;         // This should bounce between 0 and 2, representing the number of checkmark sides which have completed animating.
@@ -146,7 +147,9 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     self.layer.shadowOpacity = 0.f;
     self.layer.cornerRadius = self.radius;
     self.backgroundColor = [UIColor clearColor];
+    
     self.rippleAnimationQueue = [NSMutableArray array];
+    self.deathRowForCircleLayers = [NSMutableArray array];
     
     
     self.lineLeft   = [CAShapeLayer new];
@@ -302,7 +305,6 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     
     CGFloat tapCircleDiameterEndValue = (self.rippleFromTapLocation) ? self.radius * 4 : self.radius * 2.f; // if the circle comes from the center, its the perfect size. otherwise it will be quite small.
 
-
     // Calculate the tap circle's ending diameter:
     CGFloat tapCircleFinalDiameter = (self.rippleFromTapLocation) ? self.radius * 4 : self.radius * 2.f; // if the circle comes from the center, its the perfect size. otherwise it will be quite small.
     
@@ -381,11 +383,17 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     //NSLog(@"Fading away");
     
     CALayer *tempAnimationLayer = [self.rippleAnimationQueue firstObject];
+    if (nil != tempAnimationLayer) {
+        [self.deathRowForCircleLayers addObject:tempAnimationLayer];
+    }
+    
     if (self.rippleAnimationQueue.count > 0) {
         [self.rippleAnimationQueue removeObjectAtIndex:0];
     }
     
     CABasicAnimation *fadeOut = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    [fadeOut setValue:@"fadeCircleOut" forKey:@"id"];
+    fadeOut.delegate = self;
     fadeOut.fromValue = [NSNumber numberWithFloat:tempAnimationLayer.opacity];
     fadeOut.toValue = [NSNumber numberWithFloat:0.f];
     fadeOut.duration = bfPaperCheckbox_tapCircleGrowthDurationConstant;
@@ -955,7 +963,11 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
             [self spinCheckboxAnimated:YES withAngle1:M_PI_4 andAngle2:-5*M_PI_4 andRadiusDenominator:4 forDuration:bfPaperCheckbox_animationDurationConstant / 2.f];
         }
     }
-
+    // Remove tap-circles:
+    else if ([[animation valueForKey:@"id"] isEqualToString:@"fadeCircleOut"]) {
+        [[self.deathRowForCircleLayers objectAtIndex:0] removeFromSuperlayer];
+        [self.deathRowForCircleLayers removeObjectAtIndex:0];
+    }
 }
 
 
