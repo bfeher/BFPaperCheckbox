@@ -965,8 +965,10 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     }
     // Remove tap-circles:
     else if ([[animation valueForKey:@"id"] isEqualToString:@"fadeCircleOut"]) {
-        [[self.deathRowForCircleLayers objectAtIndex:0] removeFromSuperlayer];
-        [self.deathRowForCircleLayers removeObjectAtIndex:0];
+        if (self.deathRowForCircleLayers.count > 0) {
+            [[self.deathRowForCircleLayers objectAtIndex:0] removeFromSuperlayer];
+            [self.deathRowForCircleLayers removeObjectAtIndex:0];
+        }
     }
 }
 
