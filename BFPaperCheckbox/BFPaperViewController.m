@@ -35,6 +35,7 @@
 @property BFPaperCheckbox *paperCheckbox2;
 @property UILabel *paperCheckboxLabel;
 @property UILabel *paperCheckboxLabel2;
+@property UILabel *standardSwitchLabel;
 @end
 
 @implementation BFPaperViewController
@@ -84,14 +85,15 @@
     standardSwitch.center = CGPointMake(self.paperCheckbox.center.x, standardSwitch.frame.origin.y);
     standardSwitch.tintColor = [UIColor paperColorGray700];
     standardSwitch.onTintColor = [UIColor paperColorGreen];
+    [standardSwitch addTarget:self action:@selector(standardSwitchChangedState:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:standardSwitch];
     
     // Set up a label for standard switch:
-    UILabel *standardSwitchLabel = [[UILabel alloc] initWithFrame:CGRectMake(80, 100, 200, 31)];
-    standardSwitchLabel.center = CGPointMake(self.paperCheckboxLabel.center.x, standardSwitchLabel.frame.origin.y);
-    standardSwitchLabel.text = @"Standard switch";
-    standardSwitchLabel.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:standardSwitchLabel];
+    self.standardSwitchLabel = [[UILabel alloc] initWithFrame:CGRectMake(80, 100, 200, 31)];
+    self.standardSwitchLabel.center = CGPointMake(self.paperCheckboxLabel.center.x, self.standardSwitchLabel.frame.origin.y);
+    self.standardSwitchLabel.text = @"Standard switch [OFF]";
+    self.standardSwitchLabel.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:self.standardSwitchLabel];
 
     
     // A button for programmatically swapping states with animations:
@@ -117,10 +119,10 @@
 - (void)tapped:(UIButton *)sender
 {
     BOOL animate;
-    if (sender.tag == 2001) {
+    if (sender.tag == 2001) {       // animate button tag
         animate = YES;
     }
-    else if (sender.tag == 2002) {
+    else if (sender.tag == 2002) {  // static button tag
         animate = NO;
     }
     
@@ -144,6 +146,13 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+#pragma mark UISwitch Delegate
+- (void)standardSwitchChangedState:(UISwitch *)sender
+{
+    self.standardSwitchLabel.text = sender.isOn ? @"Standard switch [ON]" : @"Standard switch [OFF]";
 }
 
 

@@ -44,6 +44,7 @@
 @property int checkmarkSidesCompletedAnimating;         // This should bounce between 0 and 2, representing the number of checkmark sides which have completed animating.
 @property BOOL finishedAnimations;
 @property (nonatomic, readwrite) BOOL isChecked;
+//@property BOOL alreadyCalledDelegate;
 @end
 
 
@@ -236,6 +237,10 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     self.isChecked = !self.isChecked;
     //NSLog(@"self.isChecked: %@", self.isChecked ? @"YES" : @"NO");
 
+    // Notify our delegate that we changed states!
+    [self.delegate paperCheckboxChangedState:self];
+    
+
     if (self.isChecked) {
         // Shrink checkBOX:
         [self spinCheckboxAnimated:animated withAngle1:M_PI_4 andAngle2:-5*M_PI_4 andRadiusDenominator:4.f forDuration:bfPaperCheckbox_animationDurationConstant];
@@ -245,19 +250,16 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
         [self shrinkAwayCheckmarkAnimated:animated];
     }
     [self fadeTapCircleOut];
-    
-    // Notify our delegate that we changed states!
-    [self.delegate paperCheckboxChangedState:self];
 }
 
 - (void)switchStatesAnimated:(BOOL)animated
 {
     // As long as this comment remains, Animating the change will take the regular path, statically changing the state will take a second path. I would like to combine the two but right now this is faster and easier.
     if (animated) {
-        [self private_switchStatesAnimated:YES];  // setting to NO will break everything as non-animated version do not yet exist.
+        [self private_switchStatesAnimated:animated];  // setting to NO will break everything as a non-animated version of this function does not yet exist.
     }
     else {
-        self.isChecked ? [self uncheckAnimated:NO] : [self checkAnimated:NO];
+        self.isChecked ? [self uncheckAnimated:animated] : [self checkAnimated:animated];
     }
 }
 
@@ -267,15 +269,16 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
         return;
     }
     self.isChecked = YES;
-
-    if (animated) {
-        [self spinCheckboxAnimated:YES withAngle1:M_PI_4 andAngle2:-5*M_PI_4 andRadiusDenominator:4.f forDuration:bfPaperCheckbox_animationDurationConstant];
-    }
-    else {
-        [self drawCheckmarkAnimated:NO];
-    }
+    
     // Notify our delegate that we changed states!
     [self.delegate paperCheckboxChangedState:self];
+
+    if (animated) {
+        [self spinCheckboxAnimated:animated withAngle1:M_PI_4 andAngle2:-5*M_PI_4 andRadiusDenominator:4.f forDuration:bfPaperCheckbox_animationDurationConstant];
+    }
+    else {
+        [self drawCheckmarkAnimated:animated];
+    }
 }
 
 - (void)uncheckAnimated:(BOOL)animated
@@ -284,15 +287,16 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
         return;
     }
     self.isChecked = NO;
-
-    if (animated) {
-        [self shrinkAwayCheckmarkAnimated:YES];
-    }
-    else {
-        [self drawCheckBoxAnimated:NO];
-    }
+    
     // Notify our delegate that we changed states!
     [self.delegate paperCheckboxChangedState:self];
+
+    if (animated) {
+        [self shrinkAwayCheckmarkAnimated:animated];
+    }
+    else {
+        [self drawCheckBoxAnimated:animated];
+    }
 }
 
 
@@ -614,9 +618,6 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
 - (void)shrinkAwayCheckboxAnimated:(BOOL)animated
 // This fucntion only modyfies the checkbox. When it's animation is complete, it calls a function to draw the checkmark.
 {
-//    self.finishedAnimations = NO;
-//    self.checkmarkSidesCompletedAnimating = 0;
-    
     // Red dot for debugging
     /*CALayer *redDot = [[CALayer alloc] init];
     redDot.backgroundColor = [UIColor redColor].CGColor;
@@ -892,7 +893,7 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
         if (self.checkboxSidesCompletedAnimating >= 4) {
             self.checkboxSidesCompletedAnimating = 0;
             self.finishedAnimations = YES;
-            //NSLog(@"FINISHED animating 4 sides of checkbox");
+            NSLog(@"FINISHED drawing BOX");
         }
     }
     // Shrink away checkBOX:
@@ -906,6 +907,7 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
         self.checkboxSidesCompletedAnimating++;
         
         if (self.checkboxSidesCompletedAnimating >= 4) {
+            NSLog(@"FINISHED shrinking box");
             self.checkboxSidesCompletedAnimating = 0;
             [self drawCheckmarkAnimated:YES];
         }
@@ -921,6 +923,7 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
         self.checkboxSidesCompletedAnimating++;
         
         if (self.checkboxSidesCompletedAnimating >= 4) {
+            NSLog(@"FINISHED spinning box CW");
             self.checkboxSidesCompletedAnimating = 0;
             [self shrinkAwayCheckboxAnimated:YES];
         }
@@ -936,6 +939,7 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
         self.checkboxSidesCompletedAnimating++;
         
         if (self.checkboxSidesCompletedAnimating >= 4) {
+            NSLog(@"FINISHED spinning box CCW");
             self.checkboxSidesCompletedAnimating = 0;
             self.finishedAnimations = YES;
             [self drawCheckBoxAnimated:YES];
@@ -950,7 +954,7 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
         if (self.checkmarkSidesCompletedAnimating >= 2) {
             self.checkmarkSidesCompletedAnimating = 0;
             self.finishedAnimations = YES;
-            //NSLog(@"FINISHED animating 2 lines of checkmark");
+            NSLog(@"FINISHED drawing checkmark");
         }
     }
     // Shrink checkMARK:
@@ -959,6 +963,7 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
              [[animation valueForKey:@"id"] isEqualToString:mark_eraseLongLine]) {
         self.checkmarkSidesCompletedAnimating++;
         if (self.checkmarkSidesCompletedAnimating >= 2) {
+            NSLog(@"FINISHED shrinking checkmark");
             self.checkmarkSidesCompletedAnimating = 0;
             [self spinCheckboxAnimated:YES withAngle1:M_PI_4 andAngle2:-5*M_PI_4 andRadiusDenominator:4 forDuration:bfPaperCheckbox_animationDurationConstant / 2.f];
         }

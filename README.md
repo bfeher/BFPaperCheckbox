@@ -17,6 +17,9 @@ You can also set whether or not the tap-circle should appear from the location o
 By default, BFPaperCheckboxes use "Smart Color" which will match the tap-circle's positive color to the color of the checkmark (`checkmarkColor`).
 You can set your own colors via: `.tapCirclePositiveColor` and `.tapCircleNegativeColor`. Note that setting these disables Smart Color.
 
+*Note: Try not to use super slow animation times. It breaks the visual effects (not the functionality though) plus, why would you?*
+
+
 ## Properties
 `UIColor *checkmarkColor` <br />
 A UIColor to use for the checkmark color. Note that self.tintColor will be used for the square box color.
@@ -114,7 +117,7 @@ Learn more at http://cocoapods.org
 Add this to your podfile to add BFPaperCheckbox to your project.
 ```ruby
 platform :ios, '7.0'
-pod 'BFPaperCheckbox', '~> 1.2.2'
+pod 'BFPaperCheckbox', '~> 1.2.3'
 ```
 
 
