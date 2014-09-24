@@ -10,29 +10,29 @@
 	<string>BFPaperCheckbox</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>D85446DF-98DB-40FD-B4D9-96AF6FFFE2F7</key>
+		<key>D529D5FA3CA86CBC3C10CA62994710BD982EEECE</key>
 		<string>https://github.com/bfeher/BFPaperCheckbox.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>BFPaperCheckbox.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>D85446DF-98DB-40FD-B4D9-96AF6FFFE2F7</key>
+		<key>D529D5FA3CA86CBC3C10CA62994710BD982EEECE</key>
 		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/bfeher/BFPaperCheckbox.git</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>D85446DF-98DB-40FD-B4D9-96AF6FFFE2F7</string>
+	<string>D529D5FA3CA86CBC3C10CA62994710BD982EEECE</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>D85446DF-98DB-40FD-B4D9-96AF6FFFE2F7</string>
+			<string>D529D5FA3CA86CBC3C10CA62994710BD982EEECE</string>
 			<key>IDESourceControlWCCName</key>
 			<string>BFPaperCheckbox</string>
 		</dict>
