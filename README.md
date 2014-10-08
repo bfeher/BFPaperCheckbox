@@ -21,13 +21,16 @@ You can set your own colors via: `.tapCirclePositiveColor` and `.tapCircleNegati
 
 
 ## Properties
+`BOOL isChecked` <br />
+A BOOL representing the state of the checkbox. YES means checked, NO means unchecked.
+
 `UIColor *checkmarkColor` <br />
 A UIColor to use for the checkmark color. Note that self.tintColor will be used for the square box color.
 
 `UIColor *tapCirclePositiveColor` <br />
 The UIColor to use for the circle which appears where you tap to check the box. NOTE: Setting this defeats the "Smart Color" ability of the tap circle. Alpha values less than 1 are recommended.
 
-`UIColor *chectapCircleNegativeColorkmarkColor`<br /> 
+`UIColor *tapCircleNegativeColor`<br /> 
 The UIColor to use for the circle which appears where you tap to uncheck the box. NOTE: Setting this defeats the "Smart Color" ability of the tap circle. Alpha values less than 1 are recommended.
 
 `BOOL rippleFromTapLocation`<br />
