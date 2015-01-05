@@ -37,7 +37,7 @@ The UIColor to use for the circle which appears where you tap to uncheck the box
 A flag to set to YES to have the tap-circle ripple from point of touch. If this is set to NO, the tap-circle will always ripple from the center of the control. Default is YES.
 
 ## Delegate
-`- (void)paperCheckboxChangedState:(BFPaperCheckbox *)checkbox`<br />
+`(void)paperCheckboxChangedState:(BFPaperCheckbox *)checkbox`<br />
 An optional protocol method for detecting when the checkbox state changed. You can check its current state here with 'checkbox.isChecked'.
 
 ## Constant
@@ -54,7 +54,7 @@ Use this function to manually check the checkbox. Does nothing if already checke
 @param `animated` A BOOL flag to choose whether or not to animate the change.
 
 
-`void)uncheckAnimated:(BOOL)animated`<br />
+`(void)uncheckAnimated:(BOOL)animated`<br />
 Use this function to manually uncheck the checkbox. Does nothing if already unchecked.
 @param `animated` A BOOL flag to choose whether or not to animate the change.
 
