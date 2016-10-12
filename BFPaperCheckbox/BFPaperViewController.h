@@ -28,8 +28,7 @@
 
 
 #import <UIKit/UIKit.h>
-#import "BFPaperCheckbox.h"
 
-@interface BFPaperViewController : UIViewController <BFPaperCheckboxDelegate>
+@interface BFPaperViewController : UIViewController
 
 @end

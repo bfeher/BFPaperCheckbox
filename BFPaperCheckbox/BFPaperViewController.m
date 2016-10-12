@@ -3,7 +3,8 @@
 //  BFPaperCheckbox
 //
 //  Created by Bence Feher on 7/22/14.
-//  Copyright (c) 2014 Bence Feher. All rights reserved.
+//  Last updated by Bence Feher on 10/12/2016.
+//  Copyright (c) 2016 Bence Feher. All rights reserved.
 //
 // The MIT License (MIT)
 //
@@ -28,96 +29,113 @@
 
 
 #import "BFPaperViewController.h"
-#import "UIColor+BFPaperColors.h"
+// Classes:
+#import "BFPaperCheckbox.h"
 
-@interface BFPaperViewController ()
-@property BFPaperCheckbox *paperCheckbox;
-@property BFPaperCheckbox *paperCheckbox2;
-@property UILabel *paperCheckboxLabel;
-@property UILabel *paperCheckboxLabel2;
-@property UILabel *standardSwitchLabel;
+
+@interface BFPaperViewController () <BFPaperCheckboxDelegate>
+// Standard switch for comparison:
+@property (weak, nonatomic) IBOutlet UISwitch *standardSwitch;
+@property (weak, nonatomic) IBOutlet UILabel *standardSwitchLabel;
+// BFPaperCheckboxes, both IB and programmatically created:
+@property (weak, nonatomic) IBOutlet BFPaperCheckbox *storyboardPaperCheckbox;
+@property (weak, nonatomic) IBOutlet UILabel *storyboardPaperCheckboxLabel;
+@property BFPaperCheckbox *programmaticPaperCheckbox;
+@property UILabel *programmaticPaperCheckboxLabel;
 @end
+
 
 @implementation BFPaperViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    // Set ourselves to tbe delegate of the standard switch:
+    self.storyboardPaperCheckbox.delegate = self;   // Note that this guy is completely customized in the storyboard. Check out it's properties inspector and play around :)
     
-    // Forgive the lack of autolayout for this simple example program.
+    // Create and modify another BFPaperCheckbox programmatically:
+    self.programmaticPaperCheckbox = [[BFPaperCheckbox alloc] initWithFrame:CGRectMake(0, 0, bfPaperCheckboxDefaultDiameter, bfPaperCheckboxDefaultDiameter)];
+    self.programmaticPaperCheckbox.tag = 1002;
+    self.programmaticPaperCheckbox.delegate = self;
+    self.programmaticPaperCheckbox.tintColor = [UIColor colorWithRed:97.f/255.f green:97.f/255.f blue:97.f/255.f alpha:1];
+    // Note, we will use default values for the rest, change them yourself to experiment and find a setup you like :)
+    self.programmaticPaperCheckbox.touchUpAnimationDuration = -1;
+    self.programmaticPaperCheckbox.touchDownAnimationDuration = -1;
+    self.programmaticPaperCheckbox.rippleFromTapLocation = NO;
+    self.programmaticPaperCheckbox.checkmarkColor = nil;
+    self.programmaticPaperCheckbox.positiveColor = nil;
+    self.programmaticPaperCheckbox.negativeColor = nil;
+    self.programmaticPaperCheckbox.startDiameter = -1;
+    self.programmaticPaperCheckbox.endDiameter = 0;
+    self.programmaticPaperCheckbox.burstAmount = 0;
     
-    // Set up fist checkbox:
-    self.paperCheckbox = [[BFPaperCheckbox alloc] initWithFrame:CGRectMake(20, 150, bfPaperCheckboxDefaultRadius * 2, bfPaperCheckboxDefaultRadius * 2)];
-    self.paperCheckbox.tag = 1001;
-    self.paperCheckbox.delegate = self;
-    [self.view addSubview:self.paperCheckbox];
+    [self.view addSubview:self.programmaticPaperCheckbox];
     
-    // Set up first checkbox label:
-    self.paperCheckboxLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 31)];
-    self.paperCheckboxLabel.text = @"BFPaperCheckbox [OFF]";
-    self.paperCheckboxLabel.backgroundColor = [UIColor clearColor];
-    self.paperCheckboxLabel.center = CGPointMake(self.paperCheckbox.center.x + ((2 * self.paperCheckboxLabel.frame.size.width) / 3), self.paperCheckbox.center.y);
-    [self.view addSubview:self.paperCheckboxLabel];
+    // Setup the label for our programmaticPaperCheckbox:
+    self.programmaticPaperCheckboxLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 286, 21)];
+    self.programmaticPaperCheckboxLabel.minimumScaleFactor = 0.5f;
+    self.programmaticPaperCheckboxLabel.text = @"Programmatic [OFF]";
+    [self.view addSubview:self.programmaticPaperCheckboxLabel];
     
     
-    // Set up second checkbox and customize it:
-    self.paperCheckbox2 = [[BFPaperCheckbox alloc] initWithFrame:CGRectMake(0, 250, 25 * 2, 25 * 2)];
-    self.paperCheckbox2.center = CGPointMake(self.paperCheckbox.center.x, self.paperCheckbox2.frame.origin.y);
-    self.paperCheckbox2.tag = 1002;
-    self.paperCheckbox2.delegate = self;
-    self.paperCheckbox2.rippleFromTapLocation = NO;
-    self.paperCheckbox2.tapCirclePositiveColor = [UIColor paperColorAmber]; // We could use [UIColor colorWithAlphaComponent] here to make a better tap-circle.
-    self.paperCheckbox2.tapCircleNegativeColor = [UIColor paperColorRed];   // We could use [UIColor colorWithAlphaComponent] here to make a better tap-circle.
-    self.paperCheckbox2.checkmarkColor = [UIColor paperColorLightBlue];
-    [self.view addSubview:self.paperCheckbox2];
-    
-    // Set up second checkbox label:
-    self.paperCheckboxLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 31)];
-    self.paperCheckboxLabel2.text = @"Customized [OFF]";
-    self.paperCheckboxLabel2.backgroundColor = [UIColor clearColor];
-    self.paperCheckboxLabel2.center = CGPointMake(self.paperCheckbox2.center.x + ((2 * self.paperCheckboxLabel2.frame.size.width) / 3), self.paperCheckbox2.center.y);
-    [self.view addSubview:self.paperCheckboxLabel2];
-
-
     // Set up a standard switch:
-    UISwitch *standardSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(0, 100, 1, 1)];
-    standardSwitch.center = CGPointMake(self.paperCheckbox.center.x, standardSwitch.frame.origin.y);
-    standardSwitch.tintColor = [UIColor paperColorGray700];
-    standardSwitch.onTintColor = [UIColor paperColorGreen];
-    [standardSwitch addTarget:self action:@selector(standardSwitchChangedState:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:standardSwitch];
+    self.standardSwitch.tintColor = [UIColor colorWithRed:97.f/255.f green:97.f/255.f blue:97.f/255.f alpha:1];
+    self.standardSwitch.onTintColor = [UIColor colorWithRed:76.f/255.f green:175.f/255.f blue:80.f/255.f alpha:1];
+    [self.standardSwitch addTarget:self action:@selector(standardSwitchChangedState:) forControlEvents:UIControlEventTouchUpInside];
     
-    // Set up a label for standard switch:
-    self.standardSwitchLabel = [[UILabel alloc] initWithFrame:CGRectMake(80, 100, 200, 31)];
-    self.standardSwitchLabel.center = CGPointMake(self.paperCheckboxLabel.center.x, self.standardSwitchLabel.frame.origin.y);
-    self.standardSwitchLabel.text = @"Standard switch [OFF]";
-    self.standardSwitchLabel.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:self.standardSwitchLabel];
-
     
-    // A button for programmatically swapping states with animations:
-    UIButton *animateChangeBtn = [[UIButton alloc] initWithFrame:CGRectMake(20, 300, 135, 31)];
-    animateChangeBtn.tag = 2001;
-    animateChangeBtn.backgroundColor = [UIColor darkGrayColor];
-    [animateChangeBtn setTitle:@"animate change" forState:UIControlStateNormal];
-    [animateChangeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [animateChangeBtn addTarget:self action:@selector(tapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:animateChangeBtn];
-    
-    // A button for programmatically swapping states without animations:
-    UIButton *staticChangeBtn = [[UIButton alloc] initWithFrame:CGRectMake(165, 300, 135, 31)];
-    staticChangeBtn.tag = 2002;
-    staticChangeBtn.backgroundColor = [UIColor darkGrayColor];
-    [staticChangeBtn setTitle:@"static change" forState:UIControlStateNormal];
-    [staticChangeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [staticChangeBtn addTarget:self action:@selector(tapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:staticChangeBtn];
-
+    // Autolayout code; you can ignore this.
+    self.programmaticPaperCheckbox.translatesAutoresizingMaskIntoConstraints = NO;
+    self.programmaticPaperCheckboxLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    NSLayoutConstraint *widthConstraint = [NSLayoutConstraint constraintWithItem:self.programmaticPaperCheckbox
+                                                                       attribute:NSLayoutAttributeWidth
+                                                                       relatedBy:NSLayoutRelationEqual
+                                                                          toItem:nil
+                                                                       attribute:NSLayoutAttributeNotAnAttribute
+                                                                      multiplier:1 constant:bfPaperCheckboxDefaultDiameter];
+    NSLayoutConstraint *heightConstraint = [NSLayoutConstraint constraintWithItem:self.programmaticPaperCheckbox
+                                                                        attribute:NSLayoutAttributeHeight
+                                                                        relatedBy:NSLayoutRelationEqual
+                                                                           toItem:nil
+                                                                        attribute:NSLayoutAttributeNotAnAttribute
+                                                                       multiplier:1 constant:bfPaperCheckboxDefaultDiameter];
+    [self.programmaticPaperCheckbox addConstraints:@[widthConstraint, heightConstraint]];
+    NSLayoutConstraint *centerXConstraint = [NSLayoutConstraint constraintWithItem:self.programmaticPaperCheckbox
+                                                                         attribute:NSLayoutAttributeCenterX
+                                                                         relatedBy:NSLayoutRelationEqual
+                                                                            toItem:self.storyboardPaperCheckbox
+                                                                         attribute:NSLayoutAttributeCenterX
+                                                                        multiplier:1
+                                                                          constant:0];
+    NSLayoutConstraint *verticalSpacingConstraint = [NSLayoutConstraint constraintWithItem:self.programmaticPaperCheckbox
+                                                                                 attribute:NSLayoutAttributeTop
+                                                                                 relatedBy:NSLayoutRelationEqual
+                                                                                    toItem:self.storyboardPaperCheckbox
+                                                                                 attribute:NSLayoutAttributeBottom
+                                                                                multiplier:1 constant:18];
+    NSLayoutConstraint *centerYConstraint = [NSLayoutConstraint constraintWithItem:self.programmaticPaperCheckboxLabel
+                                                                         attribute:NSLayoutAttributeCenterY
+                                                                         relatedBy:NSLayoutRelationEqual
+                                                                            toItem:self.programmaticPaperCheckbox
+                                                                         attribute:NSLayoutAttributeCenterY
+                                                                        multiplier:1 constant:0];
+    NSLayoutConstraint *leadingLabelConstraint = [NSLayoutConstraint constraintWithItem:self.programmaticPaperCheckboxLabel
+                                                                              attribute:NSLayoutAttributeLeading
+                                                                              relatedBy:NSLayoutRelationEqual
+                                                                                 toItem:self.programmaticPaperCheckbox
+                                                                              attribute:NSLayoutAttributeTrailing
+                                                                             multiplier:1 constant:8];
+    NSLayoutConstraint *trailingLabelConstraint = [NSLayoutConstraint constraintWithItem:self.programmaticPaperCheckboxLabel
+                                                                               attribute:NSLayoutAttributeTrailing
+                                                                               relatedBy:NSLayoutRelationEqual
+                                                                                  toItem:self.view
+                                                                               attribute:NSLayoutAttributeTrailingMargin
+                                                                              multiplier:1 constant:0];
+    [self.view addConstraints:@[centerXConstraint, verticalSpacingConstraint, centerYConstraint, leadingLabelConstraint, trailingLabelConstraint]];
 }
 
-- (void)tapped:(UIButton *)sender
-{
+
+- (IBAction)tapped:(UIButton *)sender {
     BOOL animate;
     if (sender.tag == 2001) {       // animate button tag
         animate = YES;
@@ -125,20 +143,26 @@
     else if (sender.tag == 2002) {  // static button tag
         animate = NO;
     }
-    
-    /* 
+    // Animate our standard switch:
+    if (self.standardSwitch.isOn) {
+        [self.standardSwitch setOn:NO animated:animate];
+    } else {
+        [self.standardSwitch setOn:YES animated:animate];
+    }
+    [self standardSwitchChangedState:self.standardSwitch];
+
+    /*
      * Below are the two ways of programmatically setting the state of a checkbox.
      */
+    // (1) Swap storyboardPaperCheckbox state with the 'switchStates...' method:
+    [self.storyboardPaperCheckbox switchStatesAnimated:animate];
     
-    // (1) Swap paperCheckbox's state with the 'switchStates...' method:
-    [self.paperCheckbox switchStatesAnimated:animate];
-    
-    // (2) Swap paperCheckbox2's state with the 'check...'/'uncheck...' methods:
-    if (self.paperCheckbox2.isChecked) {
-        [self.paperCheckbox2 uncheckAnimated:animate];
+    // (2) Swap programmaticPaperCheckbox's state with the 'check...'/'uncheck...' methods:
+    if (self.programmaticPaperCheckbox.isChecked) {
+        [self.programmaticPaperCheckbox uncheckAnimated:animate];
     }
     else {
-        [self.paperCheckbox2 checkAnimated:animate];
+        [self.programmaticPaperCheckbox checkAnimated:animate];
     }
 }
 
@@ -150,20 +174,18 @@
 
 
 #pragma mark UISwitch Delegate
-- (void)standardSwitchChangedState:(UISwitch *)sender
-{
+- (IBAction)standardSwitchChangedState:(UISwitch *)sender {
     self.standardSwitchLabel.text = sender.isOn ? @"Standard switch [ON]" : @"Standard switch [OFF]";
 }
-
 
 #pragma mark - BFPaperCheckbox Delegate
 - (void)paperCheckboxChangedState:(BFPaperCheckbox *)checkbox
 {
     if (checkbox.tag == 1001) {      // First box
-        self.paperCheckboxLabel.text = self.paperCheckbox.isChecked ? @"BFPaperCheckbox [ON]" : @"BFPaperCheckbox [OFF]";
+        self.storyboardPaperCheckboxLabel.text = self.storyboardPaperCheckbox.isChecked ? @"IB Custom [ON]" : @"IB Custom [OFF]";
     }
     else if (checkbox.tag == 1002) { // Second box
-        self.paperCheckboxLabel2.text = self.paperCheckbox2.isChecked ? @"Customized [ON]" : @"Customized [OFF]";
+        self.programmaticPaperCheckboxLabel.text = self.programmaticPaperCheckbox.isChecked ? @"Programmatic [ON]" : @"Programmatic [OFF]";
     }
 }
 
