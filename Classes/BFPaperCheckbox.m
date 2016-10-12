@@ -28,7 +28,7 @@
 
 
 #import "BFPaperCheckbox.h"
-#import "UIColor+BFPaperColors.h"
+
 
 @interface BFPaperCheckbox()
 @property CGPoint centerPoint;
@@ -39,27 +39,25 @@
 @property CGPoint tapPoint;
 @property NSMutableArray *rippleAnimationQueue;
 @property NSMutableArray *deathRowForCircleLayers;  // This is where old circle layers go to be killed :(
-@property CGFloat radius;
 @property int checkboxSidesCompletedAnimating;          // This should bounce between 0 and 4, representing the number of checkbox sides which have completed animating.
 @property int checkmarkSidesCompletedAnimating;         // This should bounce between 0 and 2, representing the number of checkmark sides which have completed animating.
 @property BOOL finishedAnimations;
 @property (nonatomic, readwrite) BOOL isChecked;
-//@property BOOL alreadyCalledDelegate;
 @end
 
 
-
-
 @implementation BFPaperCheckbox
+@synthesize touchDownAnimationDuration = _touchDownAnimationDuration;
+@synthesize touchUpAnimationDuration = _touchUpAnimationDuration;
+@synthesize burstAmount = _burstAmount;
+@synthesize checkmarkColor = _checkmarkColor;
+@synthesize negativeColor = _negativeColor;
+@synthesize positiveColor = _positiveColor;
+#pragma mark - Constants
 // -Button size:
-CGFloat const bfPaperCheckboxDefaultRadius = 39.f;
+CGFloat const bfPaperCheckboxDefaultDiameter = 49.f;
 // -animation durations:
 static CGFloat const bfPaperCheckbox_animationDurationConstant       = 0.12f;
-static CGFloat const bfPaperCheckbox_tapCircleGrowthDurationConstant = bfPaperCheckbox_animationDurationConstant * 2;
-// -tap-circle's size:
-static CGFloat const bfPaperCheckbox_tapCircleDiameterStartValue     = 1.f;// for the mask
-// -tap-circle's beauty:
-static CGFloat const bfPaperCheckbox_tapFillConstant                 = 0.3f;
 // -checkbox's beauty:
 static CGFloat const bfPaperCheckbox_checkboxSideLength              = 9.f;
 // -animation function names:
@@ -91,14 +89,12 @@ static NSString *const mark_eraseShortLine = @"smallCheckmarkLine2";
 static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
 
 
-
-
 #pragma mark - Default Initializers
 - (instancetype)init
 {
     self = [super init];
     if (self) {
-        [self setupWithRadius:bfPaperCheckboxDefaultRadius];
+        [self setupWithDiameter:bfPaperCheckboxDefaultDiameter];
     }
     return self;
 }
@@ -107,7 +103,7 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setupWithRadius:MAX(CGRectGetWidth(frame), CGRectGetHeight(frame)) / 2.f];
+        [self setupWithDiameter:MAX(CGRectGetWidth(frame), CGRectGetHeight(frame))];
     }
     return self;
 }
@@ -116,42 +112,112 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
 {
     self = [super initWithCoder:decoder];
     if (self) {
-        [self setupWithRadius:bfPaperCheckboxDefaultRadius];
+        [self setupWithDiameter:bfPaperCheckboxDefaultDiameter];
     }
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+- (void)layoutSubviews
 {
-    // Drawing code
+    [super layoutSubviews];
+    if (self.isChecked) {
+        [self drawCheckmarkAnimated:NO];
+    } else {
+        [self drawCheckBoxAnimated:NO];
+    }
 }
-*/
 
 
-#pragma mark - Custom Initializers
-- (void)setupWithRadius:(CGFloat)radius
+#pragma mark - Setters and Getters
+- (CGFloat)touchDownAnimationDuration
+{
+    if (_touchDownAnimationDuration < 0) {
+        return 0.25f;
+    }
+    return _touchDownAnimationDuration;
+}
+- (void)setTouchDownAnimationDuration:(CGFloat)touchDownAnimationDuration
+{
+    _touchUpAnimationDuration = touchDownAnimationDuration;
+}
+
+- (CGFloat)touchUpAnimationDuration
+{
+    if (_touchUpAnimationDuration < 0) {
+        return self.touchDownAnimationDuration * 2.f;
+    }
+    return _touchUpAnimationDuration;
+}
+- (void)setTouchUpAnimationDuration:(CGFloat)touchUpAnimationDuration
+{
+    _touchUpAnimationDuration = touchUpAnimationDuration;
+}
+
+- (CGFloat)burstAmount
+{
+    if (_burstAmount < 0) {
+        return 0;
+    }
+    return _burstAmount;
+}
+- (void)setBurstAmount:(CGFloat)burstAmount
+{
+    _burstAmount = burstAmount;
+}
+
+- (UIColor *)checkmarkColor
+{
+    if (!_checkmarkColor) {
+        return [UIColor colorWithRed:76.f/255.f green:175.f/255.f blue:80.f/255.f alpha:1];
+    }
+    return _checkmarkColor;
+}
+- (void)setCheckmarkColor:(UIColor *)checkmarkColor
+{
+    _checkmarkColor = checkmarkColor;
+}
+
+- (UIColor *)negativeColor
+{
+    if (!_negativeColor) {
+        UIColor *tint = self.tintColor;
+        return [tint colorWithAlphaComponent:0.3f];
+    }
+    return _negativeColor;
+}
+- (void)setNegativeColor:(UIColor *)negativeColor
+{
+    _negativeColor = negativeColor;
+}
+
+- (UIColor *)positiveColor
+{
+    if (!_positiveColor) {
+        return [self.checkmarkColor colorWithAlphaComponent:0.3f];
+    }
+    return _positiveColor;
+}
+- (void)setPositiveColor:(UIColor *)positiveColor
+{
+    _positiveColor = positiveColor;
+}
+
+
+#pragma mark - Setup
+- (void)setupWithDiameter:(CGFloat)diameter
 {
     // Defaults:
-    self.radius = radius;
     self.finishedAnimations = YES;
     _isChecked = NO;
-    self.rippleFromTapLocation = YES;
-    self.tapCirclePositiveColor = nil;
-    self.tapCircleNegativeColor = nil;
-    self.checkmarkColor = [UIColor paperColorGreen];
-    self.tintColor = [UIColor paperColorGray700];
+    self.tintColor = self.tintColor ? self.tintColor : [UIColor colorWithRed:97.f/255.f green:97.f/255.f blue:97.f/255.f alpha:1];
     self.layer.masksToBounds = YES;
     self.clipsToBounds = YES;
     self.layer.shadowOpacity = 0.f;
-    self.layer.cornerRadius = self.radius;
+    self.layer.cornerRadius = diameter / 2.f;
     self.backgroundColor = [UIColor clearColor];
     
     self.rippleAnimationQueue = [NSMutableArray array];
     self.deathRowForCircleLayers = [NSMutableArray array];
-    
     
     self.lineLeft   = [CAShapeLayer new];
     self.lineTop    = [CAShapeLayer new];
@@ -194,7 +260,8 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
 
 
 #pragma mark - Gesture Recognizer Delegate
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
     
     CGPoint location = [touch locationInView:self];
     //NSLog(@"location: x = %0.2f, y = %0.2f", location.x, location.y);
@@ -231,6 +298,7 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
 
 
 #pragma mark - Utility functions
+#pragma mark Public
 - (void)private_switchStatesAnimated:(BOOL)animated
 {
     // Change states:
@@ -299,6 +367,56 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     }
 }
 
+#pragma mark Private
+- (CGFloat)calculateTapCircleFinalDiameter
+{
+    CGFloat finalDiameter = self.endDiameter;
+    if (self.endDiameter <= 0) {
+        // Calulate a diameter that will always cover the entire button:
+        //////////////////////////////////////////////////////////////////////////////
+        // Special thanks to github user @ThePantsThief for providing this code!    //
+        //////////////////////////////////////////////////////////////////////////////
+        CGFloat centerWidth   = self.frame.size.width;
+        CGFloat centerHeight  = self.frame.size.height;
+        CGFloat tapWidth      = 2 * MAX(self.tapPoint.x, centerWidth - self.tapPoint.x);
+        CGFloat tapHeight     = 2 * MAX(self.tapPoint.y, centerHeight - self.tapPoint.y);
+        CGFloat desiredWidth  = self.rippleFromTapLocation ? tapWidth : centerWidth;
+        CGFloat desiredHeight = self.rippleFromTapLocation ? tapHeight : centerHeight;
+        CGFloat diameter      = sqrt(pow(desiredWidth, 2) + pow(desiredHeight, 2));
+        finalDiameter = diameter;
+    }
+    return finalDiameter;
+}
+
+- (CGFloat)calculateTapCircleStartingDiameter
+{
+    if (self.startDiameter <= 1) {
+        return 1.f;
+    } else {
+        return self.startDiameter;
+    }
+}
+
+- (CGPathRef)createCenteredLineWithRadius:(CGFloat)radius angle:(CGFloat)angle offset:(CGPoint)offset
+// you are responsible for releasing the return CGPath
+{
+    self.centerPoint = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    
+    CGMutablePathRef path = CGPathCreateMutable();
+    
+    float c = cosf(angle);
+    float s = sinf(angle);
+    
+    CGPathMoveToPoint(path, NULL,
+                      self.centerPoint.x + offset.x + radius * c,
+                      self.centerPoint.y + offset.y + radius * s);
+    CGPathAddLineToPoint(path, NULL,
+                         self.centerPoint.x + offset.x - radius * c,
+                         self.centerPoint.y + offset.y - radius * s);
+    
+    return path;
+}
+
 
 #pragma mark - Animation
 - (void)growTapCircle
@@ -306,29 +424,29 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     //NSLog(@"expanding a tap circle");
     
     // Spawn a growing circle that "ripples" through the button:
-    
-    CGFloat tapCircleDiameterEndValue = (self.rippleFromTapLocation) ? self.radius * 4 : self.radius * 2.f; // if the circle comes from the center, its the perfect size. otherwise it will be quite small.
-
+    // Calculate the tap circle's starting diameter:
+    CGFloat tapCircleStartingDiameter = [self calculateTapCircleStartingDiameter];
     // Calculate the tap circle's ending diameter:
-    CGFloat tapCircleFinalDiameter = (self.rippleFromTapLocation) ? self.radius * 4 : self.radius * 2.f; // if the circle comes from the center, its the perfect size. otherwise it will be quite small.
+    CGFloat tapCircleFinalDiameter = [self calculateTapCircleFinalDiameter];
+
     
     // Create a UIView which we can modify for its frame value later (specifically, the ability to use .center):
     UIView *tapCircleLayerSizerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tapCircleFinalDiameter, tapCircleFinalDiameter)];
     tapCircleLayerSizerView.center = self.rippleFromTapLocation ? self.tapPoint : CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
     
     // Calculate starting path:
-    UIView *startingRectSizerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, bfPaperCheckbox_tapCircleDiameterStartValue, bfPaperCheckbox_tapCircleDiameterStartValue)];
+    UIView *startingRectSizerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tapCircleStartingDiameter, tapCircleStartingDiameter)];
     startingRectSizerView.center = tapCircleLayerSizerView.center;
     
     // Create starting circle path:
-    UIBezierPath *startingCirclePath = [UIBezierPath bezierPathWithRoundedRect:startingRectSizerView.frame cornerRadius:bfPaperCheckbox_tapCircleDiameterStartValue / 2.f];
+    UIBezierPath *startingCirclePath = [UIBezierPath bezierPathWithRoundedRect:startingRectSizerView.frame cornerRadius:tapCircleStartingDiameter / 2.f];
     
     // Calculate ending path:
-    UIView *endingRectSizerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tapCircleDiameterEndValue, tapCircleDiameterEndValue)];
+    UIView *endingRectSizerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tapCircleFinalDiameter, tapCircleFinalDiameter)];
     endingRectSizerView.center = tapCircleLayerSizerView.center;
     
     // Create ending circle path:
-    UIBezierPath *endingCirclePath = [UIBezierPath bezierPathWithRoundedRect:endingRectSizerView.frame cornerRadius:tapCircleDiameterEndValue / 2.f];
+    UIBezierPath *endingCirclePath = [UIBezierPath bezierPathWithRoundedRect:endingRectSizerView.frame cornerRadius:tapCircleFinalDiameter / 2.f];
     
     // Create tap circle:
     CAShapeLayer *tapCircle = [CAShapeLayer layer];
@@ -339,11 +457,13 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     // Set tap circle layer's background color:
     if (self.isChecked) {
         // It is currently checked, so we are unchecking it:
-        tapCircle.fillColor = (!self.tapCircleNegativeColor) ? [[UIColor paperColorGray700] colorWithAlphaComponent:bfPaperCheckbox_tapFillConstant].CGColor : self.tapCircleNegativeColor.CGColor;
+        UIColor *negativeColor = self.negativeColor;
+        tapCircle.fillColor = negativeColor.CGColor;
     }
     else {
         // It is currently unchecked, so we are checking it:
-        tapCircle.fillColor = (!self.tapCirclePositiveColor) ? [self.checkmarkColor colorWithAlphaComponent:bfPaperCheckbox_tapFillConstant].CGColor : self.tapCirclePositiveColor.CGColor;
+        UIColor *positiveColor = self.positiveColor;
+        tapCircle.fillColor = positiveColor.CGColor;
     }
 
     
@@ -360,7 +480,7 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     tapCircleGrowthAnimation.delegate = self;
     [tapCircleGrowthAnimation setValue:@"tapGrowth" forKey:@"id"];
     [UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:)];
-    tapCircleGrowthAnimation.duration = bfPaperCheckbox_tapCircleGrowthDurationConstant;
+    tapCircleGrowthAnimation.duration = self.touchDownAnimationDuration;
     tapCircleGrowthAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
     tapCircleGrowthAnimation.fromValue = (__bridge id)startingCirclePath.CGPath;
     tapCircleGrowthAnimation.toValue = (__bridge id)endingCirclePath.CGPath;
@@ -381,30 +501,57 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     [tapCircle addAnimation:fadeIn forKey:@"opacityAnimation"];
 }
 
-
 - (void)fadeTapCircleOut
 {
-    //NSLog(@"Fading away");
-    if (self.rippleAnimationQueue.count > 0) {
-        CALayer *tempAnimationLayer = [self.rippleAnimationQueue firstObject];
-        if (nil != tempAnimationLayer) {
-            [self.deathRowForCircleLayers addObject:tempAnimationLayer];
+    // Calculate the tap circle's ending diameter:
+    CGFloat tapCircleFinalDiameter = [self calculateTapCircleFinalDiameter];
+    tapCircleFinalDiameter += self.burstAmount;
+    
+    UIView *endingRectSizerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tapCircleFinalDiameter, tapCircleFinalDiameter)];
+    endingRectSizerView.center = self.rippleFromTapLocation ? self.tapPoint : CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    
+    // Create ending circle path for mask:
+    UIBezierPath *endingCirclePath = [UIBezierPath bezierPathWithRoundedRect:endingRectSizerView.frame cornerRadius:tapCircleFinalDiameter / 2.f];
+
+    // Get the next tap circle to expand:
+    CAShapeLayer *tapCircle = [self.rippleAnimationQueue firstObject];
+    if (nil != tapCircle) {
+        if (self.rippleAnimationQueue.count > 0) {
+            [self.rippleAnimationQueue removeObjectAtIndex:0];
         }
-        [self.rippleAnimationQueue removeObjectAtIndex:0];
+        [self.deathRowForCircleLayers addObject:tapCircle];
         
+        CGPathRef startingPath = tapCircle.path;
+        CGFloat startingOpacity = tapCircle.opacity;
+        
+        if ([[tapCircle animationKeys] count] > 0) {
+            startingPath = [[tapCircle presentationLayer] path];
+            startingOpacity = [[tapCircle presentationLayer] opacity];
+        }
+        
+        // Burst tap-circle:
+        CABasicAnimation *tapCircleGrowthAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
+        tapCircleGrowthAnimation.duration = self.touchUpAnimationDuration;
+        tapCircleGrowthAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+        tapCircleGrowthAnimation.fromValue = (__bridge id)startingPath;
+        tapCircleGrowthAnimation.toValue = (__bridge id)endingCirclePath.CGPath;
+        tapCircleGrowthAnimation.fillMode = kCAFillModeForwards;
+        tapCircleGrowthAnimation.removedOnCompletion = NO;
+        
+        // Fade tap-circle out:
         CABasicAnimation *fadeOut = [CABasicAnimation animationWithKeyPath:@"opacity"];
         [fadeOut setValue:@"fadeCircleOut" forKey:@"id"];
         fadeOut.delegate = self;
-        fadeOut.fromValue = [NSNumber numberWithFloat:tempAnimationLayer.opacity];
+        fadeOut.fromValue = [NSNumber numberWithFloat:startingOpacity];
         fadeOut.toValue = [NSNumber numberWithFloat:0.f];
-        fadeOut.duration = bfPaperCheckbox_tapCircleGrowthDurationConstant;
+        fadeOut.duration = self.touchUpAnimationDuration;
         fadeOut.fillMode = kCAFillModeForwards;
         fadeOut.removedOnCompletion = NO;
         
-        [tempAnimationLayer addAnimation:fadeOut forKey:@"opacityAnimation"];
+        [tapCircle addAnimation:tapCircleGrowthAnimation forKey:@"animatePath"];
+        [tapCircle addAnimation:fadeOut forKey:@"opacityAnimation"];
     }
 }
-
 
 - (void)drawCheckBoxAnimated:(BOOL)animated
 {
@@ -519,7 +666,6 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     CGPathRelease(newBottomPath);
 }
 
-
 - (void)spinCheckboxAnimated:(BOOL)animated withAngle1:(CGFloat)angle1
                    andAngle2:(CGFloat)angle2
         andRadiusDenominator:(CGFloat)radiusDenominator
@@ -614,7 +760,7 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
 }
 
 - (void)shrinkAwayCheckboxAnimated:(BOOL)animated
-// This fucntion only modyfies the checkbox. When it's animation is complete, it calls a function to draw the checkmark.
+// This function only modyfies the checkbox. When it's animation is complete, it calls a function to draw the checkmark.
 {
     // Red dot for debugging
     /*CALayer *redDot = [[CALayer alloc] init];
@@ -741,7 +887,6 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     CGPathRelease(newBottomPath);
 }
 
-
 - (void)drawCheckmarkAnimated:(BOOL)animated
 {
     self.lineLeft.opacity = 0;
@@ -801,9 +946,8 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     CGPathRelease(newBottomPath);
 }
 
-
 - (void)shrinkAwayCheckmarkAnimated:(BOOL)animated
-// This fucntion only modyfies the checkmark. When it's animation is complete, it calls a function to draw the checkbox.
+// This function only modyfies the checkmark. When it's animation is complete, it calls a function to draw the checkbox.
 {
     self.finishedAnimations = NO;
     self.checkmarkSidesCompletedAnimating = 0;
@@ -875,7 +1019,7 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     CGPathRelease(newBottomPath);
 }
 
-
+#pragma mark Delegate
 - (void)animationDidStop:(CAAnimation *)animation finished:(BOOL)flag
 {
     // Draw checkBOX:
@@ -973,27 +1117,6 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
             [self.deathRowForCircleLayers removeObjectAtIndex:0];
         }
     }
-}
-
-
-- (CGPathRef)createCenteredLineWithRadius:(CGFloat)radius angle:(CGFloat)angle offset:(CGPoint)offset
-// you are responsible for releasing the return CGPath
-{
-    self.centerPoint = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-
-    CGMutablePathRef path = CGPathCreateMutable();
-    
-    float c = cosf(angle);
-    float s = sinf(angle);
-    
-    CGPathMoveToPoint(path, NULL,
-                      self.centerPoint.x + offset.x + radius * c,
-                      self.centerPoint.y + offset.y + radius * s);
-    CGPathAddLineToPoint(path, NULL,
-                         self.centerPoint.x + offset.x - radius * c,
-                         self.centerPoint.y + offset.y - radius * s);
-    
-    return path;
 }
 
 @end

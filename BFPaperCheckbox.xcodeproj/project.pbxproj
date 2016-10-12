@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6CC761E404395BF620BF7573 /* libPods-BFPaperCheckbox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49BE78AD9A98053E4CDC08FA /* libPods-BFPaperCheckbox.a */; };
+		505A11071DADB39D00262C8C /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 505A11061DADB39D00262C8C /* Launch Screen.storyboard */; };
 		F40AB593197DE209008EC959 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F40AB592197DE209008EC959 /* Foundation.framework */; };
 		F40AB595197DE209008EC959 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F40AB594197DE209008EC959 /* CoreGraphics.framework */; };
 		F40AB597197DE209008EC959 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F40AB596197DE209008EC959 /* UIKit.framework */; };
@@ -36,9 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		35D0AE8CE0290DEF6BFB2F3E /* Pods-BFPaperCheckbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BFPaperCheckbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-BFPaperCheckbox/Pods-BFPaperCheckbox.release.xcconfig"; sourceTree = "<group>"; };
-		49BE78AD9A98053E4CDC08FA /* libPods-BFPaperCheckbox.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BFPaperCheckbox.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		53051FAB292A98B70ED528F2 /* Pods-BFPaperCheckbox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BFPaperCheckbox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BFPaperCheckbox/Pods-BFPaperCheckbox.debug.xcconfig"; sourceTree = "<group>"; };
+		505A11061DADB39D00262C8C /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		F40AB58F197DE209008EC959 /* BFPaperCheckbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BFPaperCheckbox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F40AB592197DE209008EC959 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F40AB594197DE209008EC959 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -70,7 +68,6 @@
 				F40AB595197DE209008EC959 /* CoreGraphics.framework in Frameworks */,
 				F40AB597197DE209008EC959 /* UIKit.framework in Frameworks */,
 				F40AB593197DE209008EC959 /* Foundation.framework in Frameworks */,
-				6CC761E404395BF620BF7573 /* libPods-BFPaperCheckbox.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,15 +84,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3988F15C891BA04A42354EE6 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				53051FAB292A98B70ED528F2 /* Pods-BFPaperCheckbox.debug.xcconfig */,
-				35D0AE8CE0290DEF6BFB2F3E /* Pods-BFPaperCheckbox.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		F40AB586197DE209008EC959 = {
 			isa = PBXGroup;
 			children = (
@@ -103,7 +91,6 @@
 				F40AB5B7197DE209008EC959 /* BFPaperCheckboxTests */,
 				F40AB591197DE209008EC959 /* Frameworks */,
 				F40AB590197DE209008EC959 /* Products */,
-				3988F15C891BA04A42354EE6 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -123,7 +110,6 @@
 				F40AB594197DE209008EC959 /* CoreGraphics.framework */,
 				F40AB596197DE209008EC959 /* UIKit.framework */,
 				F40AB5B1197DE209008EC959 /* XCTest.framework */,
-				49BE78AD9A98053E4CDC08FA /* libPods-BFPaperCheckbox.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -150,6 +136,7 @@
 				F40AB59B197DE209008EC959 /* InfoPlist.strings */,
 				F40AB59E197DE209008EC959 /* main.m */,
 				F40AB5A0197DE209008EC959 /* BFPaperCheckbox-Prefix.pch */,
+				505A11061DADB39D00262C8C /* Launch Screen.storyboard */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -188,13 +175,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F40AB5C1197DE209008EC959 /* Build configuration list for PBXNativeTarget "BFPaperCheckbox" */;
 			buildPhases = (
-				EBDFD68C2DA9129C96235829 /* 📦 Check Pods Manifest.lock */,
 				F40AB58B197DE209008EC959 /* Sources */,
 				F40AB58C197DE209008EC959 /* Frameworks */,
 				F45A44F11A77113D006A64C3 /* ShellScript */,
 				F40AB58D197DE209008EC959 /* Resources */,
-				FF67F14242C3BFF1E2BE6651 /* 📦 Embed Pods Frameworks */,
-				E447CDF31DE6FDF77E97780C /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -264,6 +248,7 @@
 			files = (
 				F40AB5AB197DE209008EC959 /* Images.xcassets in Resources */,
 				F40AB59D197DE209008EC959 /* InfoPlist.strings in Resources */,
+				505A11071DADB39D00262C8C /* Launch Screen.storyboard in Resources */,
 				F40AB5A6197DE209008EC959 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -279,36 +264,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		E447CDF31DE6FDF77E97780C /* 📦 Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "📦 Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BFPaperCheckbox/Pods-BFPaperCheckbox-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EBDFD68C2DA9129C96235829 /* 📦 Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "📦 Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 		F45A44F11A77113D006A64C3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -321,21 +276,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
 			shellScript = "echo \"Running Build Number bash script.\"\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"\nupdatedBuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\necho \"Updated Build Number $updatedBuildNumber\"";
-		};
-		FF67F14242C3BFF1E2BE6651 /* 📦 Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "📦 Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BFPaperCheckbox/Pods-BFPaperCheckbox-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -469,30 +409,28 @@
 		};
 		F40AB5C2197DE209008EC959 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 53051FAB292A98B70ED528F2 /* Pods-BFPaperCheckbox.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BFPaperCheckbox/BFPaperCheckbox-Prefix.pch";
 				INFOPLIST_FILE = "BFPaperCheckbox/BFPaperCheckbox-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
 		};
 		F40AB5C3197DE209008EC959 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 35D0AE8CE0290DEF6BFB2F3E /* Pods-BFPaperCheckbox.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BFPaperCheckbox/BFPaperCheckbox-Prefix.pch";
 				INFOPLIST_FILE = "BFPaperCheckbox/BFPaperCheckbox-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
