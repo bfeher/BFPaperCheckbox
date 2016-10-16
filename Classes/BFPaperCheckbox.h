@@ -29,6 +29,7 @@
 
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
 
 @class BFPaperCheckbox;
 @protocol BFPaperCheckboxDelegate <NSObject>
@@ -39,7 +40,13 @@
 
 
 IB_DESIGNABLE
-@interface BFPaperCheckbox : UIControl <UIGestureRecognizerDelegate, CAAnimationDelegate>
+#if __IPHONE_OS_VERSION_MAX_ALLOWED < 100000
+// CAAnimationDelegate is not available before iOS 10 SDK
+@interface BFPaperCheckbox : UIControl <UIGestureRecognizerDelegate>
+#else
+@interface BFPaperCheckbox : UIControl <UIGestureRecognizerDelegate,CAAnimationDelegate>
+#endif
+
 #pragma mark - Constants
 /** A nice recommended value for size. (eg. [[BFPaperCheckbox alloc] initWithFrame:CGRectMake(x, y, bfPaperCheckboxDefaultDiameter, bfPaperCheckboxDefaultDiameter)]; */
 extern CGFloat const bfPaperCheckboxDefaultDiameter;
