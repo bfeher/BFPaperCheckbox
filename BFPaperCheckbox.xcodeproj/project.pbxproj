@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		34C27B261DB346B200E691EC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34C27B251DB346B200E691EC /* QuartzCore.framework */; };
 		505A11071DADB39D00262C8C /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 505A11061DADB39D00262C8C /* Launch Screen.storyboard */; };
+		7D5BBC787166A5290DA9B364 /* libPods-BFPaperCheckboxTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 860E0D8AD074EC7313F6EBBA /* libPods-BFPaperCheckboxTests.a */; };
 		F40AB593197DE209008EC959 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F40AB592197DE209008EC959 /* Foundation.framework */; };
 		F40AB595197DE209008EC959 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F40AB594197DE209008EC959 /* CoreGraphics.framework */; };
 		F40AB597197DE209008EC959 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F40AB596197DE209008EC959 /* UIKit.framework */; };
@@ -23,6 +25,7 @@
 		F40AB5BC197DE209008EC959 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F40AB5BA197DE209008EC959 /* InfoPlist.strings */; };
 		F40AB5BE197DE209008EC959 /* BFPaperCheckboxTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F40AB5BD197DE209008EC959 /* BFPaperCheckboxTests.m */; };
 		F40AB5C9197DE2CB008EC959 /* BFPaperCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = F40AB5C8197DE2CB008EC959 /* BFPaperCheckbox.m */; };
+		FA9E060D1F4C720895C84682 /* libPods-BFPaperCheckbox.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B3874EFE72FED62901BF38A /* libPods-BFPaperCheckbox.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +39,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		27E048C28C0139383E3CB039 /* Pods-BFPaperCheckbox.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BFPaperCheckbox.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BFPaperCheckbox/Pods-BFPaperCheckbox.debug.xcconfig"; sourceTree = "<group>"; };
+		2B3874EFE72FED62901BF38A /* libPods-BFPaperCheckbox.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BFPaperCheckbox.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E554A6366644F1E7C093107 /* Pods-BFPaperCheckboxTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BFPaperCheckboxTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BFPaperCheckboxTests/Pods-BFPaperCheckboxTests.debug.xcconfig"; sourceTree = "<group>"; };
+		34C27B251DB346B200E691EC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		505A11061DADB39D00262C8C /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		65CD7C6BBAFE71213B1CC54C /* Pods-BFPaperCheckboxTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BFPaperCheckboxTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-BFPaperCheckboxTests/Pods-BFPaperCheckboxTests.release.xcconfig"; sourceTree = "<group>"; };
+		860E0D8AD074EC7313F6EBBA /* libPods-BFPaperCheckboxTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BFPaperCheckboxTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEF77EB02D26F2B6F6645610 /* Pods-BFPaperCheckbox.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BFPaperCheckbox.release.xcconfig"; path = "Pods/Target Support Files/Pods-BFPaperCheckbox/Pods-BFPaperCheckbox.release.xcconfig"; sourceTree = "<group>"; };
 		F40AB58F197DE209008EC959 /* BFPaperCheckbox.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BFPaperCheckbox.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F40AB592197DE209008EC959 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F40AB594197DE209008EC959 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -65,9 +75,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34C27B261DB346B200E691EC /* QuartzCore.framework in Frameworks */,
 				F40AB595197DE209008EC959 /* CoreGraphics.framework in Frameworks */,
 				F40AB597197DE209008EC959 /* UIKit.framework in Frameworks */,
 				F40AB593197DE209008EC959 /* Foundation.framework in Frameworks */,
+				FA9E060D1F4C720895C84682 /* libPods-BFPaperCheckbox.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,12 +90,24 @@
 				F40AB5B2197DE209008EC959 /* XCTest.framework in Frameworks */,
 				F40AB5B4197DE209008EC959 /* UIKit.framework in Frameworks */,
 				F40AB5B3197DE209008EC959 /* Foundation.framework in Frameworks */,
+				7D5BBC787166A5290DA9B364 /* libPods-BFPaperCheckboxTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C112C18C1E072E46533298D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				27E048C28C0139383E3CB039 /* Pods-BFPaperCheckbox.debug.xcconfig */,
+				CEF77EB02D26F2B6F6645610 /* Pods-BFPaperCheckbox.release.xcconfig */,
+				2E554A6366644F1E7C093107 /* Pods-BFPaperCheckboxTests.debug.xcconfig */,
+				65CD7C6BBAFE71213B1CC54C /* Pods-BFPaperCheckboxTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		F40AB586197DE209008EC959 = {
 			isa = PBXGroup;
 			children = (
@@ -91,6 +115,7 @@
 				F40AB5B7197DE209008EC959 /* BFPaperCheckboxTests */,
 				F40AB591197DE209008EC959 /* Frameworks */,
 				F40AB590197DE209008EC959 /* Products */,
+				0C112C18C1E072E46533298D /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -106,10 +131,13 @@
 		F40AB591197DE209008EC959 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				34C27B251DB346B200E691EC /* QuartzCore.framework */,
 				F40AB592197DE209008EC959 /* Foundation.framework */,
 				F40AB594197DE209008EC959 /* CoreGraphics.framework */,
 				F40AB596197DE209008EC959 /* UIKit.framework */,
 				F40AB5B1197DE209008EC959 /* XCTest.framework */,
+				2B3874EFE72FED62901BF38A /* libPods-BFPaperCheckbox.a */,
+				860E0D8AD074EC7313F6EBBA /* libPods-BFPaperCheckboxTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -175,10 +203,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F40AB5C1197DE209008EC959 /* Build configuration list for PBXNativeTarget "BFPaperCheckbox" */;
 			buildPhases = (
+				096BF3841197EC8BC6AE1C14 /* [CP] Check Pods Manifest.lock */,
 				F40AB58B197DE209008EC959 /* Sources */,
 				F40AB58C197DE209008EC959 /* Frameworks */,
 				F45A44F11A77113D006A64C3 /* ShellScript */,
 				F40AB58D197DE209008EC959 /* Resources */,
+				29F05F9DCAA07B4CD6F18289 /* [CP] Embed Pods Frameworks */,
+				53D339CC74F3258DAEA7949D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -193,9 +224,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F40AB5C4197DE209008EC959 /* Build configuration list for PBXNativeTarget "BFPaperCheckboxTests" */;
 			buildPhases = (
+				A1B00AE70FB8B1F35BD5BABC /* [CP] Check Pods Manifest.lock */,
 				F40AB5AC197DE209008EC959 /* Sources */,
 				F40AB5AD197DE209008EC959 /* Frameworks */,
 				F40AB5AE197DE209008EC959 /* Resources */,
+				E487B7BCE62A9B22BBA7DC68 /* [CP] Embed Pods Frameworks */,
+				412C4DB4706B539F2BAB7480 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -264,6 +298,96 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		096BF3841197EC8BC6AE1C14 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		29F05F9DCAA07B4CD6F18289 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BFPaperCheckbox/Pods-BFPaperCheckbox-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		412C4DB4706B539F2BAB7480 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BFPaperCheckboxTests/Pods-BFPaperCheckboxTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		53D339CC74F3258DAEA7949D /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BFPaperCheckbox/Pods-BFPaperCheckbox-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A1B00AE70FB8B1F35BD5BABC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		E487B7BCE62A9B22BBA7DC68 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-BFPaperCheckboxTests/Pods-BFPaperCheckboxTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		F45A44F11A77113D006A64C3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -409,6 +533,7 @@
 		};
 		F40AB5C2197DE209008EC959 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 27E048C28C0139383E3CB039 /* Pods-BFPaperCheckbox.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -423,6 +548,7 @@
 		};
 		F40AB5C3197DE209008EC959 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CEF77EB02D26F2B6F6645610 /* Pods-BFPaperCheckbox.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -437,6 +563,7 @@
 		};
 		F40AB5C5197DE209008EC959 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2E554A6366644F1E7C093107 /* Pods-BFPaperCheckboxTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/BFPaperCheckbox.app/BFPaperCheckbox";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -459,6 +586,7 @@
 		};
 		F40AB5C6197DE209008EC959 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 65CD7C6BBAFE71213B1CC54C /* Pods-BFPaperCheckboxTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/BFPaperCheckbox.app/BFPaperCheckbox";
 				FRAMEWORK_SEARCH_PATHS = (
