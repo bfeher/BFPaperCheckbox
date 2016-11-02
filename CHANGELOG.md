@@ -5,6 +5,11 @@ BFPaperCheckbox
 > Note that this changelog was started very late, at roughly the time between version 1.2.8 and 2.0.0 Non consecutive jumps in changelog mean that there were incremental builds that weren't released as a pod, typically while solving a problem.
 
 
+2.1.0
+---------
+* (+) Added an IBInspectable 'cornerRadius' property.  
+
+
 2.0.0
 ---------
 * (+) IB Designable support!  
