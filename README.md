@@ -44,6 +44,9 @@ You can set your own colors via: `.positiveColor` and `.negativeColor`. Note tha
 `UIColor *negativeColor` <br />
 >The UIColor to use for the circle which appears where you tap to uncheck the box. Default value is smartly calculated from the `.tintColor` property. Set to nil to access default. Alpha values less than 1 are recommended.  
 
+`CGFloat cornerRadius` <br />
+>The CGFloat value representing the corner radius of the control. Default value is (bfPaperCheckboxDefaultDiameter / 2). Note that negative values will be converted to 0. NO FUNNY BUSINESS!  
+
 `CGFloat startDiameter` <br />
 >A CGFLoat representing the diameter of the tap-circle as soon as it spawns, before it grows. Default is 1.f. Note that negative values and values less than 1 will be converted to the default. NO FUNNY BUSINESS!  
 

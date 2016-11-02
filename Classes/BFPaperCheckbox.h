@@ -73,6 +73,9 @@ extern CGFloat const bfPaperCheckboxDefaultDiameter;
 @property IBInspectable UIColor *negativeColor;
 
 #pragma mark Sizing
+/** The CGFloat value representing the corner radius of the control. Default value is (bfPaperCheckboxDefaultDiameter / 2). Note that negative values will be converted to 0. NO FUNNY BUSINESS! */
+@property (nonatomic) IBInspectable CGFloat cornerRadius;
+
 /** A CGFLoat representing the diameter of the tap-circle as soon as it spawns, before it grows. Default is 1.f. Note that negative values and values less than 1 will be converted to the default. NO FUNNY BUSINESS! */
 @property IBInspectable CGFloat startDiameter;
 
