@@ -202,6 +202,13 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     _positiveColor = positiveColor;
 }
 
+- (void)setCornerRadius:(CGFloat)cornerRadius
+{
+    _cornerRadius = MAX(cornerRadius, 0);
+    self.layer.cornerRadius = _cornerRadius;
+    [self layoutSubviews];
+}
+
 
 #pragma mark - Setup
 - (void)setupWithDiameter:(CGFloat)diameter
@@ -213,7 +220,7 @@ static NSString *const mark_eraseLongLine = @"largeCheckmarkLine2";
     self.layer.masksToBounds = YES;
     self.clipsToBounds = YES;
     self.layer.shadowOpacity = 0.f;
-    self.layer.cornerRadius = diameter / 2.f;
+    self.cornerRadius = diameter / 2.f;
     self.backgroundColor = [UIColor clearColor];
     
     self.rippleAnimationQueue = [NSMutableArray array];
